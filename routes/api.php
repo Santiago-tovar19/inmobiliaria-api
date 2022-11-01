@@ -75,6 +75,7 @@ Route::get('get-dashboard-data', $basePathController.'DashboardController@getDas
 
 
 Route::get('get-countries', $basePathController.'CountriesController@index');
+Route::get('get-all-roles', $basePathController.'EntityPropertiesController@getAllRoles');
 
 Route::get('test', $basePathController.'TestController@index');
 
@@ -83,9 +84,9 @@ Route::get('test', $basePathController.'TestController@index');
 
 // Directory
 
-Route::post('contacts/upload-file', $basePathController.'ContactsController@uploadDocument');
-Route::get('contacts/get-property-entities', $basePathController.'ContactsController@getPropertyEntities');
-Route::get('contacts/get-all', $basePathController.'ContactsController@getAll');
-Route::resource('contacts', $basePathController.'ContactsController');
+// Route::post('contacts/upload-file', $basePathController.'ContactsController@uploadDocument');
+// Route::get('contacts/get-property-entities', $basePathController.'ContactsController@getPropertyEntities');
+// Route::get('contacts/get-all', $basePathController.'ContactsController@getAll');
+Route::resource('users', $basePathController.'UsersController');
 
 

@@ -78,10 +78,10 @@ class User extends Authenticatable implements JWTSubject
     {
         $modules = $this->role->modules;
         $this->{'modules'} = $modules;
-        $this->roles[0]->unsetRelation('modules');
+        $this->role->unsetRelation('modules');
 
-        $role = $this->roles[0];
-        $this->unsetRelation('roles');
+        $role = $this->role;
+        $this->unsetRelation('role');
         $this->role = $role;
         return $this;
     }

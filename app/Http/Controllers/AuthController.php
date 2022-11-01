@@ -69,7 +69,7 @@ class AuthController extends Controller
 			// Send email
 			$token = Password::broker()->createToken($user);
 
-			// $user->notify(new \App\Notifications\MailResetPasswordNotification($token, $user->email));
+			$user->notify(new \App\Notifications\MailResetPasswordNotification($token, $user->email));
 
 			return ApiResponseController::response('Correo enviado', 200, $token);
 		}

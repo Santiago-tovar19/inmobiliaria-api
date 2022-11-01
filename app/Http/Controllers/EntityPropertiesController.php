@@ -30,4 +30,9 @@ class EntityPropertiesController extends Controller
     {
         return ApiResponseController::response('Exito', 200, \App\Models\TitleStatus::all());
     }
+
+    public function getAllRoles(Request $request)
+    {
+        return ApiResponseController::response('Exito', 200, \App\Models\Role::all());
+    }
 }

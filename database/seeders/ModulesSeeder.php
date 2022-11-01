@@ -15,7 +15,7 @@ class ModulesSeeder extends Seeder
      */
     public function run()
     {
-        // Truncate all tables
+        // Truncate all tablesfono
 		DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 		DB::table('modules')->truncate();
 		DB::statement('SET FOREIGN_KEY_CHECKS=1;');
@@ -24,29 +24,29 @@ class ModulesSeeder extends Seeder
             [
                 'name'        => 'Master Admin',
                 'description' => 'Master Admin',
-                'icon'        => 'heroicons_outline:adjustments-vertical',
-                'path'        => 'usuarios',
+                'icon'        => 'heroicons_outline:chart-pie',
+                'path'        => 'usuarios 1',
                 'father_id'   => NULL,
             ],
             [
                 'name'        => 'Admin',
                 'description' => 'Admin',
-                'icon'        => 'heroicons_outline:adjustments-vertical',
-                'path'        => 'usuarios',
+                'icon'        => 'heroicons_outline:chart-pie',
+                'path'        => 'usuarios 2',
                 'father_id'   => NULL,
             ],
             [
                 'name'        => 'Agente',
                 'description' => 'Agente',
-                'icon'        => 'heroicons_outline:adjustments-vertical',
-                'path'        => 'usuarios',
+                'icon'        => 'heroicons_outline:chart-pie',
+                'path'        => 'usuarios 3',
                 'father_id'   => NULL,
             ],
             [
                 'name'        => 'Consumidor',
                 'description' => 'Consumidor',
-                'icon'        => 'heroicons_outline:adjustments-vertical',
-                'path'        => 'usuarios',
+                'icon'        => 'heroicons_outline:chart-pie',
+                'path'        => 'usuarios 4',
                 'father_id'   => NULL,
             ],
 
@@ -62,10 +62,10 @@ class ModulesSeeder extends Seeder
             [
                 'name'        => 'Propiedades',
                 'description' => 'Gestor de Propiedades',
-                'icon'        => 'heroicons_outline:user-group',
+                'icon'        => 'heroicons_outline:home',
                 'path'        => 'propiedades',
                 'father_id'   => NULL,
-            ],
+            ]
 		]);
     }
 }
