@@ -34,7 +34,7 @@ class MailCreateAccount extends Notification
 	{
 
 		return (new MailMessage)
-		->subject('Registro | EducLine')
+		->subject('Registro | Inmobiliaria')
 		->view(
 			'mails.registro', ["pageUrl" => $this->pageUrl, 'email' => $this->email, 'rol' => $this->rol]
 			);

@@ -23,7 +23,7 @@ class AuthController extends Controller
     public function signIn(SignInRequest $request)
 	{
 
-        $user = User::with('role')->where('email', $request->email)->orwhere('username', $request->email)->first();
+        $user = User::with('role')->where('email', $request->email)->first();
 		if (!$user || ! Hash::check($request->password, $user->password)) {
 			return ApiResponseController::response('Usuario o contraseña invalida', 422);
 		}

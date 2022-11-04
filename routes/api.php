@@ -40,10 +40,14 @@ Route::get('get-all-roles', $basePathController.'EntityPropertiesController@getA
 Route::get('test', $basePathController.'TestController@index');
 
 
+
 Route::group(['middleware' => ['api_access']], function () use ($basePathController) {
-    Route::post('users/complete-signup/{token}', $basePathController.'UsersController@completeSignUp');
     Route::get('users/resend-signup-email/{id}', $basePathController.'UsersController@resendSignUpEmail');
     Route::resource('users', $basePathController.'UsersController');
 });
+Route::post('users/complete-signup/{token}', $basePathController.'UsersController@completeSignUp');
+
+Route::get('brokers/get-all', $basePathController.'BrokersController@getAll');
+
 
 

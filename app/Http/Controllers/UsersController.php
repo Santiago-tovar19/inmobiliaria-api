@@ -71,27 +71,24 @@ class UsersController extends Controller
             $imgName = $name;
         }
 
-        // If file exist
-        $brokerLogo = null;
-        if ($request->hasFile('broker_logo')) {
-            $file = $request->file('broker_logo');
-            $name = time().$file->getClientOriginalName();
-            $file->move(public_path().'/files/', $name);
-            $brokerLogo = $name;
-        }
-
-        $user                      = new User();
-        $user->broker_address      = $request->broker_address;
-        $user->broker_logo         = $brokerLogo;
-        $user->broker_name         = $request->broker_name;
-        $user->email               = $request->email;
-        $user->full_name           = $request->full_name;
-        $user->img                 = $imgName;
-        $user->phone               = $request->phone;
-        $user->role_id             = $request->role_id;
-        $user->username            = $request->username;
+        $user             = new User();
+        $user->first_name = $request->first_name;
+        $user->last_name  = $request->last_name;
+        $user->broker_id  = $request->broker_id;
+        $user->email      = $request->email;
+        $user->img        = $imgName;
+        $user->phone      = $request->phone;
+        $user->verified   = $request->verified === 'true' ? true : false;
+        $user->role_id    = $request->role_id;
 
         $user->save();
+
+        $rolName = Role::find($user->role_id)->nombre;
+
+		config(['auth.passwords.users.expire' => 10080]);
+		$token = Password::broker()->createToken($user);
+
+		$user->notify(new \App\Notifications\MailCreateAccount($token, $user->email, $rolName));
 
         return ApiResponseController::response('Usuario creado con exito', 200, $user);
     }
@@ -159,29 +156,13 @@ class UsersController extends Controller
             $user->img = $imgName;
         }
 
-        // If file exist
-        $request->broker_logo_changed = $request->broker_logo_changed == 'true' ? true : false;
-        $brokerLogo = null;
-        if ($request->broker_logo_changed) {
-            $file_path = public_path().'/files/'.$user->broker_logo;
-            \File::delete($file_path);
-            if($request->hasFile('broker_logo')){
-                $file = $request->file('broker_logo');
-                $name = time().$file->getClientOriginalName();
-                $file->move(public_path().'/files/', $name);
-                $brokerLogo = $name;
-            }
-            $user->broker_logo = $brokerLogo;
-        }
-
-
-        $user->broker_address      = $request->broker_address;
-        $user->broker_name         = $request->broker_name;
-        $user->email               = $request->email;
-        $user->full_name           = $request->full_name;
-        $user->phone               = $request->phone;
-        $user->role_id             = $request->role_id;
-        $user->username            = $request->username;
+        $user->first_name = $request->first_name;
+        $user->last_name  = $request->last_name;
+        $user->broker_id = $request->broker_id === 'null' ? null : $request->broker_id;
+        $user->email     = $request->email;
+        $user->phone     = $request->phone;
+        $user->verified  = $request->verified === 'true' ? true : false;
+        $user->role_id   = $request->role_id;
 
         $user->save();
 
@@ -204,9 +185,9 @@ class UsersController extends Controller
     {
         $reset = DB::table('password_resets')->where(['email'=> $request->email])->first();
 
-    if(!$reset || !Hash::check($token, $reset->token)){
-        return ApiResponseController::response('Token invalido', 422);
-    }
+        if(!$reset || !Hash::check($token, $reset->token)){
+            return ApiResponseController::response('Token invalido', 422);
+        }
 
 		$expirationDate = Carbon::parse($reset->created_at)->addMinutes(config('auth.passwords.users.expire'));
 		if($expirationDate->isPast()){
@@ -216,8 +197,6 @@ class UsersController extends Controller
 		$user                    = User::where('email', $request->email)->first();
 		$user->full_name         = $request->full_name;
 		$user->password          = bcrypt($request->password);
-		$user->broker_address    = $request->broker_address;
-		$user->broker_name       = $request->broker_name;
 		$user->phone             = $request->phone;
 		$user->email_verified_at = Carbon::now();
 		$user->save();

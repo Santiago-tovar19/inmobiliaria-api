@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>EducLine</title>
+    <title>Inmobiliaria</title>
     <style>
       /* -------------------------------------
           GLOBAL RESETS
@@ -384,7 +384,7 @@
 												<p>Si no puede visualizar el boton, puede dar click al siguiente enlace <a href="{{$pageUrl}}">{{$pageUrl}}</a></p>
 
                         <p>Estamos a su disposición, para aclarar sus dudas y brindarle soporte</p>
-                        <p>Equipo de soporte de EducLine.</p>
+                        <p>Equipo de soporte de Inmobiliaria.</p>
                       </td>
                     </tr>
                   </table>

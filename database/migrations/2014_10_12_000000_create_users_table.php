@@ -15,17 +15,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('full_name');
+            $table->string('first_name');
+            $table->string('last_name')->nullable();
             $table->string('email');
             $table->string('phone')->nullable();
             $table->string('password')->nullable();
-            $table->string('username')->nullable();
-            $table->string('broker_name')->nullable();
-            $table->string('broker_logo')->nullable();
-            $table->string('broker_address')->nullable();
+            $table->bigInteger('broker_id')->unsigned()->nullable();
+			$table->foreign('broker_id')->references('id')->on('brokers');
             $table->bigInteger('role_id')->unsigned()->nullable();
 			$table->foreign('role_id')->references('id')->on('roles');
             $table->string('img')->nullable();
+            $table->boolean('verified')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

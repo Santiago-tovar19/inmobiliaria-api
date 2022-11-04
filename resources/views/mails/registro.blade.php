@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>EducLine</title>
+    <title>Inmobiliaria</title>
     <style>
       /* -------------------------------------
           GLOBAL RESETS
@@ -352,7 +352,7 @@
                       <div style='text-align: center; width: 100%;'>
                         {{-- <img style='text-align: center; width: 200px; margin-bottom: 20px' src="{{asset('images/proyex-oit-comunicacion-satelital.png')}}" class="img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}" alt=""> --}}
                       </div>
-                        <p>Estaimado usuario, usted ha sido registrado en la plataforma EducLine bajo el rol de {{$rol}}. Le invitamos a completar el registro dando click al boton de abajo</p>
+                        <p>Estaimado usuario, usted ha sido registrado en la plataforma Inmobiliaria bajo el rol de {{$rol}}. Le invitamos a completar el registro dando click al boton de abajo</p>
                         <table align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol';margin:30px auto;padding:0;text-align:center;width:100%">
                           <tbody>
                             <tr>
@@ -384,7 +384,7 @@
 												<p>Si no puede visualizar el boton, puede dar click al siguiente enlace <a href="{{$pageUrl}}">{{$pageUrl}}</a></p>
 
                         <p>Estamos a su disposición, para aclarar sus dudas y brindarle soporte</p>
-                        <p>Equipo de soporte de EducLine.</p>
+                        <p>Equipo de soporte de Inmobiliaria.</p>
                       </td>
                     </tr>
                   </table>
