@@ -22,37 +22,6 @@ class ModulesSeeder extends Seeder
 
         DB::table('modules')->insert([
             [
-                'name'        => 'Master Admin',
-                'description' => 'Master Admin',
-                'icon'        => 'heroicons_outline:chart-pie',
-                'path'        => 'usuarios 1',
-                'father_id'   => NULL,
-            ],
-            [
-                'name'        => 'Admin',
-                'description' => 'Admin',
-                'icon'        => 'heroicons_outline:chart-pie',
-                'path'        => 'usuarios 2',
-                'father_id'   => NULL,
-            ],
-            [
-                'name'        => 'Agente',
-                'description' => 'Agente',
-                'icon'        => 'heroicons_outline:chart-pie',
-                'path'        => 'usuarios 3',
-                'father_id'   => NULL,
-            ],
-            [
-                'name'        => 'Consumidor',
-                'description' => 'Consumidor',
-                'icon'        => 'heroicons_outline:chart-pie',
-                'path'        => 'usuarios 4',
-                'father_id'   => NULL,
-            ],
-
-
-
-            [
                 'name'        => 'Usuarios',
                 'description' => 'Gestor de Usuarios',
                 'icon'        => 'heroicons_outline:user-group',

@@ -23,11 +23,6 @@ class ModuleRoleSeeder extends Seeder
         $modules = Module::where('name', '<>', 'Datos Estudiante')->get();
 
         DB::table('module_role')->insert([
-
-            [
-                'module_id' => DB::table('modules')->where('name', 'Master Admin')->first()->id,
-                'role_id'   => Role::where('name', 'Master Admin')->first()->id
-            ],
             [
                 'module_id' => DB::table('modules')->where('name', 'Usuarios')->first()->id,
                 'role_id'   => Role::where('name', 'Master Admin')->first()->id
@@ -37,24 +32,12 @@ class ModuleRoleSeeder extends Seeder
                 'role_id'   => Role::where('name', 'Master Admin')->first()->id
             ],
 
-            [
-                'module_id' => DB::table('modules')->where('name', 'Admin')->first()->id,
-                'role_id'   => Role::where('name', 'Admin')->first()->id
-            ],
+
             [
                 'module_id' => DB::table('modules')->where('name', 'Propiedades')->first()->id,
                 'role_id'   => Role::where('name', 'Admin')->first()->id
             ],
 
-
-            [
-                'module_id' => DB::table('modules')->where('name', 'Agente')->first()->id,
-                'role_id'   => Role::where('name', 'Agente')->first()->id
-            ],
-            [
-                'module_id' => DB::table('modules')->where('name', 'Consumidor')->first()->id,
-                'role_id'   => Role::where('name', 'Consumidor')->first()->id
-            ],
 
         ]);
     }
