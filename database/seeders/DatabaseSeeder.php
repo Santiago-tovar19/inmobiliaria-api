@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PropertyTypesSeeder::class);
         $this->call(CurrenciesSeeder::class);
         $this->call(PropertyStatusSeeder::class);
-        $this->call(PropertiesSeeder::class);
+        $this->call(ContractTypesSeeder::class);
+        // $this->call(PropertiesSeeder::class);
     }
 }

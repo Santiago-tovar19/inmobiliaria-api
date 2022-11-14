@@ -23,6 +23,7 @@ class PropertiesSeeder extends Seeder
         $propertyTypes = DB::table('property_types')->get()->count();
         $currencies = DB::table('currencies')->get()->count();
         $propertyStatus = DB::table('property_status')->get()->count();
+        $contactTypes = DB::table('contract_types')->get()->count();
 
         for ($i=0; $i < 100; $i++) {
             $properties[] = [
@@ -39,8 +40,13 @@ class PropertiesSeeder extends Seeder
                 'price'                   => $faker->numberBetween(1000, 1000),
                 'currency_id'             => $faker->numberBetween(1, $currencies),
                 'youtube_link'            => 'https://www.youtube.com/embed/LXb3EKWsInQ',
+                'contract_type_id'        => $faker->numberBetween(1, $contactTypes),
                 'status_id'               => $faker->numberBetween(1, $propertyStatus),
                 'parking'                 => $faker->boolean(),
+                'elevator'                => $faker->boolean(),
+                'kitchen'                 => $faker->boolean(),
+                'fireplace'               => $faker->boolean(),
+                'wifi'                    => $faker->boolean(),
                 'hoa'                     => $faker->boolean(),
                 'stories'                 => $faker->boolean(),
                 'exclusions'              => $faker->boolean(),
@@ -70,7 +76,8 @@ class PropertiesSeeder extends Seeder
             for ($i=0; $i < 5; $i++) {
                 $images[] = [
                     'property_id' => $property->id,
-                    'path' => $faker->imageUrl(1980, 1280),
+                    'name' => $faker->imageUrl(1980, 1280),
+                    'type' => $faker->randomElement(['Banner', 'Gallery']),
                     'created_at' => now(),
                     'updated_at' => now()
                 ];

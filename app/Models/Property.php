@@ -14,7 +14,7 @@ class Property extends Model
         return $this->belongsTo(PropertyType::class);
     }
 
-    public function propertyStatus()
+    public function status()
     {
         return $this->belongsTo(PropertyStatus::class);
     }

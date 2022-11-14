@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\StudentsController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,7 @@ Route::get('get-all-roles', $basePathController.'EntityPropertiesController@getA
 Route::get('test', $basePathController.'TestController@index');
 
 
+Route::get('properties/get-features', $basePathController.'PropertiesController@getFeatures');
 Route::get('properties/{id}', $basePathController.'PropertiesController@show');
 Route::group(['middleware' => ['api_access']], function () use ($basePathController) {
     Route::get('users/resend-signup-email/{id}', $basePathController.'UsersController@resendSignUpEmail');
@@ -52,3 +54,8 @@ Route::get('brokers/get-all', $basePathController.'BrokersController@getAll');
 
 
 
+Route::get('properties-imgs', function () {
+    $target = '/home/public_html/storage/app/public';
+    $shortcut = '/home/public_html/public/storage';
+    symlink($target, $shortcut);
+});

@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('property_images', function (Blueprint $table) {
+        Schema::create('contract_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->bigInteger('property_id')->unsigned()->nullable();
-			$table->foreign('property_id')->references('id')->on('properties');
-            $table->string('type'); // 'Banner', 'Gallery'
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('property_images');
+        Schema::dropIfExists('contract_types');
     }
 };
