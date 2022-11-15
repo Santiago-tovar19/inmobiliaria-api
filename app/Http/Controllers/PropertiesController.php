@@ -8,6 +8,7 @@ use App\Models\Property;
 use App\Models\PropertyImage;
 use App\Models\PropertyStatus;
 use App\Models\PropertyType;
+use App\Models\PropertyView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,7 +25,7 @@ class PropertiesController extends Controller
 
         $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
 
-		$users = Property::with( 'propertyType', 'status', 'currency')->when($request->city, function($q) use ($request) {
+		$properties = Property::with( 'propertyType', 'status', 'currency', 'contractType')->when($request->city, function($q) use ($request) {
             $q->where('city', $request->city);
         })
         ->when($request->company, function($q) use ($request) {
@@ -40,7 +41,34 @@ class PropertiesController extends Controller
 
         ->paginate($perPage);
 
-        return ApiResponseController::response('Consulta Exitosa', 200, $users);
+        return ApiResponseController::response('Consulta Exitosa', 200, $properties);
+    }
+
+    public function getFeatureProperties(Request $request)
+    {
+        $user = $request->user();
+
+        $propertyID = $request->input('propertyID');
+
+        // Randomize the results
+        $properties = Property::with( 'propertyType', 'status', 'images', 'currency', 'contractType')->where('id', '<>', $propertyID) ->inRandomOrder()->limit(5)->get();
+
+        return ApiResponseController::response('Consulta Exitosa', 200, $properties);
+    }
+
+
+
+    public function registerView(Request $request)
+    {
+        $userID = $request->input('userID');
+        $propertyID = $request->input('propertyID');
+
+        $propertyView = PropertyView::create([
+            'user_id' => $userID,
+            'property_id' => $propertyID
+        ]);
+
+        return ApiResponseController::response('Consulta Exitosa', 200, $propertyView);
     }
 
     /**
@@ -50,7 +78,7 @@ class PropertiesController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -61,6 +89,9 @@ class PropertiesController extends Controller
      */
     public function store(Request $request)
     {
+
+        // Get the authenticated user
+        $user = $request->user();
         $images = $request->images;
         $imgs = [];
         if($images) {
@@ -137,10 +168,16 @@ class PropertiesController extends Controller
         $property->swimming_pool     = $data['swimming_pool'];
         $property->kids_area         = $data['kids_area'];
         $property->pets_allowed      = $data['pets_allowed'];
+        $property->created_by        = $user->id;
 
         $property->save();
 
         $property->images()->createMany($imgs);
+
+        $property->propertyType;
+        $property->status;
+        $property->currency;
+        $property->images;
 
         return ApiResponseController::response('Property creado con exito', 200, $property);
     }
@@ -162,6 +199,8 @@ class PropertiesController extends Controller
         $property->status;
         $property->currency;
         $property->images;
+        $property->createdBy;
+        $property->contractType;
 
         return ApiResponseController::response('Consulta exitosa', 200, $property);
     }

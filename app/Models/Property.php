@@ -28,4 +28,18 @@ class Property extends Model
     {
         return $this->hasMany(PropertyImage::class);
     }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+    public function contractType()
+    {
+        return $this->belongsTo(ContractType::class);
+    }
+
+    public function views()
+    {
+        return $this->hasMany(PropertyView::class);
+    }
 }

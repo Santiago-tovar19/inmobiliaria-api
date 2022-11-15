@@ -58,6 +58,9 @@ return new class extends Migration
             $table->boolean('pets_allowed')->default(false); // Mascotas permitidas
             $table->boolean('central_air_conditioner')->default(false); // Aire Acondicionado central
 
+            $table->bigInteger('created_by')->unsigned()->nullable();
+			$table->foreign('created_by')->references('id')->on('users'); // Tipo de contrato (Venta, Alquiler)
+
             $table->string('published_at')->nullable(); // Fecha Publicada
             $table->timestamps();
         });
