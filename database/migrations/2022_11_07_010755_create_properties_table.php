@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('location_type')->nullable();; // Tipo de localizacion (Provincia o Ciudad)
             $table->string('bedrooms')->nullable();; // Dormitorios
             $table->string('bathrooms')->nullable();; // Baños
+            $table->string('video')->nullable();; // Video
 
             $table->string('size')->nullable();; // Tamaño (metros)
             $table->string('price')->nullable();; // Precio
@@ -57,11 +58,13 @@ return new class extends Migration
             $table->boolean('kids_area')->default(false); // Area de niños
             $table->boolean('pets_allowed')->default(false); // Mascotas permitidas
             $table->boolean('central_air_conditioner')->default(false); // Aire Acondicionado central
+            $table->boolean('published')->default(true); // Aire Acondicionado central
 
             $table->bigInteger('created_by')->unsigned()->nullable();
 			$table->foreign('created_by')->references('id')->on('users'); // Tipo de contrato (Venta, Alquiler)
 
             $table->string('published_at')->nullable(); // Fecha Publicada
+            $table->softDeletes();
             $table->timestamps();
         });
     }

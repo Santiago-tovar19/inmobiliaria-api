@@ -45,13 +45,14 @@ Route::get('test', $basePathController.'TestController@index');
 Route::get('properties/get-features', $basePathController.'PropertiesController@getFeatures');
 Route::get('properties/get-feature-properties', $basePathController.'PropertiesController@getFeatureProperties');
 Route::post('properties/register-view', $basePathController.'PropertiesController@registerView');
-Route::get('properties/{id}', $basePathController.'PropertiesController@show');
 Route::group(['middleware' => ['api_access']], function () use ($basePathController) {
+    // Route::get('properties/{id}', $basePathController.'PropertiesController@show');
     Route::get('/dashboard/adminmaster', $basePathController.'DashboardController@getAdmindMasterData');
     Route::get('users/resend-signup-email/{id}', $basePathController.'UsersController@resendSignUpEmail');
     Route::resource('users', $basePathController.'UsersController');
     Route::resource('properties', $basePathController.'PropertiesController');
 });
+// Route::get('properties/{id}', $basePathController.'PropertiesController@show');
 Route::post('users/complete-signup/{token}', $basePathController.'UsersController@completeSignUp');
 
 Route::get('brokers/get-all', $basePathController.'BrokersController@getAll');

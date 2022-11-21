@@ -9,6 +9,7 @@ use App\Models\PropertyImage;
 use App\Models\PropertyStatus;
 use App\Models\PropertyType;
 use App\Models\PropertyView;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,7 +38,12 @@ class PropertiesController extends Controller
         ->when($request->file, function($q) use ($request) {
             $q->where('file', 'like', '%'.$request->file.'%');
         })
-        ->where('id', '!=', $user->id)
+        ->when($user->role_id===3, function($q) use ($request) {
+            $q->where('created_by', $request->user()->id);
+        })
+        ->when($user->role_id===1, function($q) use ($request) {
+            return $q->withTrashed();
+        })
 
         ->paginate($perPage);
 
@@ -48,7 +54,7 @@ class PropertiesController extends Controller
     {
         $user = $request->user();
 
-        $propertyID = $request->input('propertyID');
+        $propertyID = $request->input('property_id');
 
         // Randomize the results
         $properties = Property::with( 'propertyType', 'status', 'images', 'currency', 'contractType')->where('id', '<>', $propertyID) ->inRandomOrder()->limit(5)->get();
@@ -121,6 +127,16 @@ class PropertiesController extends Controller
             }
         }
 
+        // Check if video is present
+        $video = $request->video ?? null;
+        if($video) {
+            // store in public folder
+            $name = $video->store('public/properties');
+            $name = explode('/', $name);
+            $name = $name[count($name)-1];
+            $video = $name;
+        }
+
         $data = $request->all();
 
         // replace null string to null
@@ -161,14 +177,20 @@ class PropertiesController extends Controller
         $property->security          = $data['security'];
         $property->lobby             = $data['lobby'];
         $property->balcony           = $data['balcony'];
+        $property->published         = $data['published'];
         $property->terrace           = $data['terrace'];
         $property->power_plant       = $data['power_plant'];
         $property->gym               = $data['gym'];
+        $property->video             = $video;
         $property->walk_in_closet    = $data['walk_in_closet'];
         $property->swimming_pool     = $data['swimming_pool'];
         $property->kids_area         = $data['kids_area'];
         $property->pets_allowed      = $data['pets_allowed'];
         $property->created_by        = $user->id;
+
+        if($property->published) {
+            $property->published_at = Carbon::now();
+        }
 
         $property->save();
 
@@ -188,9 +210,15 @@ class PropertiesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        if(!$property = Property::find($id)){
+        $user = $request->user();
+
+        !$property = Property::when($user->role_id===1, function($q) use ($request) {
+            return $q->withTrashed();
+        })->find($id);
+
+        if(!$property){
             return ApiResponseController::response('', 204);
         }
 
@@ -225,7 +253,13 @@ class PropertiesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(!$property = Property::find($id)){
+        $user = $request->user();
+
+        !$property = Property::when($user->role_id===1, function($q) use ($request) {
+            return $q->withTrashed();
+        })->find($id);
+
+        if(!$property){
             return ApiResponseController::response('', 204);
         }
 
@@ -266,6 +300,7 @@ class PropertiesController extends Controller
         $property->wifi              = $data['wifi'];
         $property->fireplace         = $data['fireplace'];
         $property->security          = $data['security'];
+        $property->published         = $data['published'];
         $property->lobby             = $data['lobby'];
         $property->balcony           = $data['balcony'];
         $property->terrace           = $data['terrace'];
@@ -275,6 +310,31 @@ class PropertiesController extends Controller
         $property->swimming_pool     = $data['swimming_pool'];
         $property->kids_area         = $data['kids_area'];
         $property->pets_allowed      = $data['pets_allowed'];
+
+        if($property->published && !$property->published_at) {
+            $property->published_at = Carbon::now();
+        }
+
+        // return $request->trashed;
+        if(!$data['trashed']) {
+            $property->deleted_at = null;
+        }
+
+        if($request->deleteVideo=='true') {
+            // Delete video from storage
+            Storage::delete($property->video);
+            $property->video = null;
+        }
+
+        $video = $request->video;
+        if($video) {
+            // store in public folder
+            $name = $video->store('public/properties');
+            $name = explode('/', $name);
+            $name = $name[count($name)-1];
+            $property->video = $name;
+        }
+
 
         $property->save();
 
@@ -331,7 +391,7 @@ class PropertiesController extends Controller
         $property->currency;
         $property->images;
 
-        return ApiResponseController::response('Consulta exitosa', 200, $property);
+        return ApiResponseController::response('Actualizado correctamente', 200, $property);
     }
 
     /**
@@ -342,7 +402,13 @@ class PropertiesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(!$property = Property::find($id)){
+            return ApiResponseController::response('', 204);
+        }
+        // Delete property from database
+        $property->delete();
+
+        return ApiResponseController::response('Eliminado correctamente', 200);
     }
 
     public function getFeatures(Request $request)
