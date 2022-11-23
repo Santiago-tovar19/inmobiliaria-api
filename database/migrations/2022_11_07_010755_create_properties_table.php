@@ -38,27 +38,27 @@ return new class extends Migration
             $table->bigInteger('contract_type_id')->unsigned()->nullable();
 			$table->foreign('contract_type_id')->references('id')->on('contract_types'); // Tipo de contrato (Venta, Alquiler)
 
-            $table->boolean('parking')->default(false); // Estacionamiento
-            $table->boolean('kitchen')->default(false); // Cocina
-            $table->boolean('elevator')->default(false); // Elevador
-            $table->boolean('wifi')->default(false); // Wifi
-            $table->boolean('fireplace')->default(false); // Chimenea
-            $table->boolean('hoa')->default(false); // HOA
-            $table->boolean('stories')->default(false); // Cuentos
-            $table->boolean('exclusions')->default(false); // Exclusiones
-            $table->boolean('level')->default(false); // Piso (Apartamento)
-            $table->boolean('security')->default(false); // Seguridad
-            $table->boolean('lobby')->default(false); // Vestíbulo
-            $table->boolean('balcony')->default(false); // Balcon
-            $table->boolean('terrace')->default(false); // Terraza
-            $table->boolean('power_plant')->default(false); // Planta electrica
-            $table->boolean('gym')->default(false); // Gimnasio
-            $table->boolean('walk_in_closet')->default(false); // Vestidor
-            $table->boolean('swimming_pool')->default(false); // Piscina
-            $table->boolean('kids_area')->default(false); // Area de niños
-            $table->boolean('pets_allowed')->default(false); // Mascotas permitidas
-            $table->boolean('central_air_conditioner')->default(false); // Aire Acondicionado central
-            $table->boolean('published')->default(true); // Aire Acondicionado central
+            $table->integer('parking')->default(0); // Estacionamiento
+            $table->integer('kitchen')->default(0); // Cocina
+            $table->integer('elevator')->default(0); // Elevador
+            $table->integer('wifi')->default(0); // Wifi
+            $table->integer('fireplace')->default(0); // Chimenea
+            $table->integer('hoa')->default(0); // HOA
+            $table->integer('stories')->default(0); // Cuentos
+            $table->integer('exclusions')->default(0); // Exclusiones
+            $table->integer('level')->default(0); // Piso (Apartamento)
+            $table->integer('security')->default(0); // Seguridad
+            $table->integer('lobby')->default(0); // Vestíbulo
+            $table->integer('balcony')->default(0); // Balcon
+            $table->integer('terrace')->default(0); // Terraza
+            $table->integer('power_plant')->default(0); // Planta electrica
+            $table->integer('gym')->default(0); // Gimnasio
+            $table->integer('walk_in_closet')->default(0); // Vestidor
+            $table->integer('swimming_pool')->default(0); // Piscina
+            $table->integer('kids_area')->default(0); // Area de niños
+            $table->integer('pets_allowed')->default(0); // Mascotas permitidas
+            $table->integer('central_air_conditioner')->default(0); // Aire Acondicionado central
+            $table->integer('published')->default(0); // Aire Acondicionado central
 
             $table->bigInteger('created_by')->unsigned()->nullable();
 			$table->foreign('created_by')->references('id')->on('users'); // Tipo de contrato (Venta, Alquiler)

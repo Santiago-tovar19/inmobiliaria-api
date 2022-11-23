@@ -30,6 +30,9 @@ class PropertyStatusSeeder extends Seeder
             ],
             [
                 'name' => 'Cerrado',
+            ],
+            [
+                'name' => 'Propiedad en planos'
             ]
 	    ]);
     }
