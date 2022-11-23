@@ -176,6 +176,8 @@ class PropertiesController extends Controller
         $property->fireplace         = $data['fireplace'];
         $property->security          = $data['security'];
         $property->lobby             = $data['lobby'];
+        $property->lat               = $data['lat'];
+        $property->lon               = $data['lon'];
         $property->balcony           = $data['balcony'];
         $property->published         = $data['published'];
         $property->terrace           = $data['terrace'];
@@ -301,6 +303,8 @@ class PropertiesController extends Controller
         $property->fireplace         = $data['fireplace'];
         $property->security          = $data['security'];
         $property->published         = $data['published'];
+        $property->lat               = $data['lat'];
+        $property->lon               = $data['lon'];
         $property->lobby             = $data['lobby'];
         $property->balcony           = $data['balcony'];
         $property->terrace           = $data['terrace'];

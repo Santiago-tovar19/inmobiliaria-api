@@ -38,6 +38,9 @@ return new class extends Migration
             $table->bigInteger('contract_type_id')->unsigned()->nullable();
 			$table->foreign('contract_type_id')->references('id')->on('contract_types'); // Tipo de contrato (Venta, Alquiler)
 
+            $table->string('lat')->nullable(); // Estacionamiento
+            $table->string('lon')->nullable(); // Cocina
+
             $table->integer('parking')->default(0); // Estacionamiento
             $table->integer('kitchen')->default(0); // Cocina
             $table->integer('elevator')->default(0); // Elevador
