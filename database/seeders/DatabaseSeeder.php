@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CurrenciesSeeder::class);
         $this->call(PropertyStatusSeeder::class);
         $this->call(ContractTypesSeeder::class);
+        $this->call(CarsSeeder::class);
         // $this->call(PropertiesSeeder::class);
     }
 }

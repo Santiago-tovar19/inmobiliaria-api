@@ -50,8 +50,11 @@ Route::group(['middleware' => ['api_access']], function () use ($basePathControl
     Route::get('/dashboard/adminmaster', $basePathController.'DashboardController@getAdmindMasterData');
     Route::get('users/resend-signup-email/{id}', $basePathController.'UsersController@resendSignUpEmail');
     Route::resource('users', $basePathController.'UsersController');
-    Route::resource('properties', $basePathController.'PropertiesController');
+
+
 });
+
+Route::resource('cars', $basePathController.'CarsController');
 // Route::get('properties/{id}', $basePathController.'PropertiesController@show');
 Route::post('users/complete-signup/{token}', $basePathController.'UsersController@completeSignUp');
 

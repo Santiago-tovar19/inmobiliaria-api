@@ -34,6 +34,13 @@ class ModulesSeeder extends Seeder
                 'icon'        => 'heroicons_outline:home',
                 'path'        => 'propiedades',
                 'father_id'   => NULL,
+            ],
+            [
+                'name'        => 'Reportes',
+                'description' => 'Gestion de reportes',
+                'icon'        => 'heroicons_outline:home',
+                'path'        => 'reportes',
+                'father_id'   => NULL,
             ]
 		]);
     }

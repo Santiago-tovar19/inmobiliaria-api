@@ -43,6 +43,11 @@ class ModuleRoleSeeder extends Seeder
                 'role_id'   => Role::where('name', 'Agente')->first()->id
             ],
 
+            [
+                'module_id' => DB::table('modules')->where('name', 'Reportes')->first()->id,
+                'role_id'   => Role::where('name', 'Master Admin')->first()->id
+            ],
+
 
         ]);
     }
