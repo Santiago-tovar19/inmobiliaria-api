@@ -36,8 +36,8 @@ class ModulesSeeder extends Seeder
                 'father_id'   => NULL,
             ],
             [
-                'name'        => 'Reportes',
-                'description' => 'Gestion de reportes',
+                'name'        => 'Carros',
+                'description' => 'Gestion de carros',
                 'icon'        => 'heroicons_outline:home',
                 'path'        => 'reportes',
                 'father_id'   => NULL,
