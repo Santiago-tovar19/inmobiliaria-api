@@ -28,6 +28,7 @@ class CarsController extends Controller
         ->when($request->file, function($q) use ($request) {
             $q->where('file', 'like', '%'.$request->file.'%');
         })
+        ->orderBy('id', 'desc')
         ->paginate($perPage);
 
         return ApiResponseController::response('Consulta Exitosa', 200, $cars);
