@@ -24,17 +24,9 @@ class UsersController extends Controller
         $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
 
 		$users = User::with('role')
-        ->when($request->city, function($q) use ($request) {
-            $q->where('city', $request->city);
-        })
-        ->when($request->company, function($q) use ($request) {
-            $q->where('compny', $request->company);
-        })
-        ->when($request->profession, function($q) use ($request) {
-            $q->where('profession', $request->profession);
-        })
-        ->when($request->file, function($q) use ($request) {
-            $q->where('file', 'like', '%'.$request->file.'%');
+        ->when($request->termino, function($q) use ($request) {
+            $q->orWhere('first_name', 'like', '%'.$request->termino.'%')
+            ->orWhere('email', 'like', '%'.$request->termino.'%');
         })
         ->where('id', '!=', $user->id)
 

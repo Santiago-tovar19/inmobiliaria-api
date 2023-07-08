@@ -39,7 +39,7 @@ class ModulesSeeder extends Seeder
                 'name'        => 'Carros',
                 'description' => 'Gestion de carros',
                 'icon'        => 'heroicons_outline:home',
-                'path'        => 'reportes',
+                'path'        => 'carros',
                 'father_id'   => NULL,
             ]
 		]);

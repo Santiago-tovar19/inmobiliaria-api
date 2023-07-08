@@ -15,7 +15,7 @@ class CarsController extends Controller
      *     path="/cars",
      *     summary="Obtener lista de carros",
      *     tags={"Carros"},
-     *     @OA\Parameter( name="per_page", in="query", description="Numero de registros", required=false, @OA\Schema(type="integer")),
+     *     @OA\Parameter( name="perPage", in="query", description="Numero de registros", required=false, @OA\Schema(type="integer")),
      *     @OA\Parameter( name="page", in="query", description="Numero de la pagina a consultar", required=false, @OA\Schema(type="integer")),
      *     @OA\Parameter( name="brand", in="query", description="Marca del carro", required=false, @OA\Schema(type="string")),
      *     @OA\Parameter( name="model", in="query", description="Modelo del carro", required=false, @OA\Schema(type="string")),

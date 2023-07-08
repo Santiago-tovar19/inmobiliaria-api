@@ -20,7 +20,7 @@
                 "operationId": "848ef97d2b359a61f9f16b4529b28f9f",
                 "parameters": [
                     {
-                        "name": "per_page",
+                        "name": "perPage",
                         "in": "query",
                         "description": "Numero de registros",
                         "required": false,
@@ -497,18 +497,19 @@
                         "nullable": true
                     },
                     "brand": {
-                        "type": "integer",
+                        "type": "string",
                         "nullable": true
                     },
                     "model": {
-                        "type": "integer",
+                        "type": "string",
                         "nullable": true
                     },
                     "placa": {
-                        "type": "integer"
+                        "type": "string",
+                        "uniqueItems": true
                     },
                     "owner_name": {
-                        "type": "integer",
+                        "type": "string",
                         "nullable": true
                     },
                     "created_at": {

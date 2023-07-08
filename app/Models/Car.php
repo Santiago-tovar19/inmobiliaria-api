@@ -15,10 +15,10 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="year", type="integer", nullable=true),
  *     @OA\Property(property="color", type="string", nullable=true),
  *     @OA\Property(property="doors", type="integer", nullable=true),
- *     @OA\Property(property="brand", type="integer", nullable=true),
- *     @OA\Property(property="model", type="integer", nullable=true),
- *     @OA\Property(property="placa", type="integer"),
- *     @OA\Property(property="owner_name", type="integer", nullable=true),
+ *     @OA\Property(property="brand", type="string", nullable=true),
+ *     @OA\Property(property="model", type="string", nullable=true),
+ *     @OA\Property(property="placa", type="string", uniqueItems=true),
+ *     @OA\Property(property="owner_name", type="string", nullable=true),
  *     @OA\Property(property="created_at", type="string", format="date-time"),
  *     @OA\Property(property="updated_at", type="string", format="date-time")
  * )
