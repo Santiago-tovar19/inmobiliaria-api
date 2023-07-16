@@ -15,40 +15,125 @@ use Illuminate\Support\Facades\Storage;
 
 class PropertiesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+  /**
+ * @OA\Get(
+ *     path="/properties",
+ *     summary="Obtener todas las propiedades",
+ *     description="Obtiene todas las propiedades con paginación y filtros opcionales",
+ *     tags={"Properties"},
+ *     @OA\Parameter(name="perPage", in="query", description="Número de elementos por página", required=false, @OA\Schema(type="integer", default=10)),
+ *     @OA\Parameter(name="name", in="query", description="Nombre de la propiedad", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="description", in="query", description="Descripción de la propiedad", required=false, @OA\Schema(type="string" )),
+ *     @OA\Parameter(name="property_type_id", in="query", description="Tipo de propiedad", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="address", in="query", description="Dirección de la propiedad", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="mls_number", in="query", description="Número MLS", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="construction_year", in="query", description="Año de construcción", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="location_type", in="query", description="Tipo de localización", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="bedrooms", in="query", description="Dormitorios", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="bathrooms", in="query", description="Baños", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="size", in="query", description="Tamaño", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="price", in="query", description="Precio", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="currency_id", in="query", description="Tipo de moneda", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="status_id", in="query", description="Estado de la propiedad", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="contract_type_id", in="query", description="Tipo de contrato", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="parking", in="query", description="Estacionamiento", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="kitchen", in="query", description="Cocina", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="elevator", in="query", description="Elevador", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="wifi", in="query", description="Wifi", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="fireplace", in="query", description="Chimenea", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="hoa", in="query", description="HOA", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="stories", in="query", description="Cuentos", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="exclusions", in="query", description="Exclusiones", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="level", in="query", description="Piso (Apartamento)", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="security", in="query", description="Seguridad", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="lobby", in="query", description="Vestíbulo", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="balcony", in="query", description="Balcon", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="terrace", in="query", description="Terraza", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="power_plant", in="query", description="Planta electrica", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="gym", in="query", description="Gimnasio", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="walk_in_closet", in="query", description="Vestidor", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="swimming_pool", in="query", description="Piscina", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="kids_area", in="query", description="Área de niños", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="pets_allowed", in="query", description="Mascotas permitidas", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="central_air_conditioner", in="query", description="Aire acondicionado central", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="published", in="query", description="Publicado", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="orderBy", in="query", description="Ordenar por columna", required=false, @OA\Schema(type="string")),
+ *     @OA\Parameter(name="order", in="query", description="Ordenar ascendentemente o descendentemente", required=false, @OA\Schema(type="string")),
+ *
+ *
+     *     @OA\Response(
+     *         response="200",
+     *         description="Operación exitosa",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 allOf={
+     *                     @OA\Schema(ref="#/components/schemas/PaginatedResponse"),
+     *                     @OA\Property(
+     *                         property="data",
+     *                         type="object",
+     *                         @OA\Property(
+     *                             property="data",
+     *                             type="object",
+     *                             @OA\Property(type="array", property="data", @OA\Items(ref="#/components/schemas/Property"))
+     *                         )
+     *                     )
+     *                 }
+     *             )
+     *         )
+     *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="No autorizado",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="message",
+ *                 type="string",
+ *                 example="No autorizado"
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Error interno del servidor",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="message",
+ *                 type="string",
+ *                 example="Error interno del servidor"
+ *             )
+ *         )
+ *     )
+ * )
+ */
     public function index(Request $request)
     {
         $user = $request->user();
 
         $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
 
-		$properties = Property::with( 'propertyType', 'status', 'currency', 'contractType')->when($request->city, function($q) use ($request) {
-            $q->where('city', $request->city);
-        })
-        ->when($request->company, function($q) use ($request) {
-            $q->where('compny', $request->company);
-        })
-        ->when($request->profession, function($q) use ($request) {
-            $q->where('profession', $request->profession);
-        })
-        ->when($request->file, function($q) use ($request) {
-            $q->where('file', 'like', '%'.$request->file.'%');
-        })
-        ->when($user->role_id===3, function($q) use ($request) {
-            $q->where('created_by', $request->user()->id);
-        })
-        ->when($user->role_id===1, function($q) use ($request) {
-            return $q->withTrashed();
-        })
+        $query = Property::with('propertyType', 'status', 'currency', 'contractType');
 
-        ->paginate($perPage);
+        // Filtrar por columnas comúnmente utilizadas para buscar propiedades
+        $searchColumns = [ "name", "description", "property_type_id", "address", "mls_number", "construction_year", "location_type", "bedrooms", "bathrooms", "size", "price", "currency_id", "status_id", "contract_type_id", "parking", "kitchen", "elevator", "wifi", "fireplace", "hoa", "stories", "exclusions", "level", "security", "lobby", "balcony", "terrace", "power_plant", "gym", "walk_in_closet", "swimming_pool", "kids_area", "pets_allowed", "central_air_conditioner", "published"];
+        foreach ($searchColumns as $column) {
+            if ($request->filled($column)) {
+                $query->where($column, 'LIKE', '%' . $request->input($column) . '%');
+            }
+            // order by
+            if ($request->filled('orderBy') && $request->filled('order')) {
+                $query->orderBy($request->input('orderBy'), $request->input('order'));
+            }
+        }
+
+        $properties = $query->paginate($perPage);
 
         return ApiResponseController::response('Consulta Exitosa', 200, $properties);
     }
+
 
     public function getFeatureProperties(Request $request)
     {
@@ -88,10 +173,49 @@ class PropertiesController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     *     path="/properties",
+     *     summary="Crear una propiedad",
+     *     tags={"Properties"},
+     *     @OA\RequestBody( required=true, @OA\JsonContent(ref="#/components/schemas/Property")*     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Registro Exitoso",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  allOf={
+     *                      @OA\Schema(ref="#/components/schemas/GeneralResponse"),
+     *                      @OA\Property(
+     *                          property="data",
+     *                          type="object",
+     *                          @OA\Property(
+     *                              property="data",
+     *                              type="object",
+     *                              ref="#/components/schemas/Property"
+     *                          )
+     *                      )
+     *                  }
+     *              )
+     *           )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Error de validacion de campos",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(
+     *                  property="errors",
+     *                  @OA\Property(
+     *                     property="brand",
+     *                    type="array",
+     *                   @OA\Items(type="string")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     * )
      */
     public function store(Request $request)
     {
@@ -207,11 +331,37 @@ class PropertiesController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ * @OA\Get(
+ *     path="/properties/{id}",
+ *     summary="Obtener detalles de una propiedad",
+ *     tags={"Properties"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID de la propiedad",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *             format="int64"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Consulta exitosa",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="data", ref="#/components/schemas/Property")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=204,
+ *         description="No se encontró la propiedad"
+ *     ),
+ *     security={
+ *         {"bearerAuth": {}}
+ *     }
+ * )
+ */
     public function show(Request $request, $id)
     {
         $user = $request->user();
@@ -247,12 +397,41 @@ class PropertiesController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ * @OA\Put(
+ *     path="/properties/{id}",
+ *     summary="Actualizar una propiedad existente",
+ *     tags={"Properties"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID de la propiedad",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *             format="int64"
+ *         )
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/Property")
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Propiedad actualizada con éxito",
+ *         @OA\JsonContent(
+ *             @OA\Property(property="message", type="string"),
+ *             @OA\Property(property="data", ref="#/components/schemas/Property")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=204,
+ *         description="No se encontró la propiedad",
+ *     ),
+ *     security={
+ *         {"bearerAuth": {}}
+ *     }
+ * )
+ */
     public function update(Request $request, $id)
     {
         $user = $request->user();
@@ -399,11 +578,37 @@ class PropertiesController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+ * @OA\Delete(
+ *     path="/properties/{id}",
+ *     summary="Eliminar una propiedad",
+ *     tags={"Properties"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID de la propiedad a eliminar",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="integer",
+ *             format="int64"
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Propiedad eliminada correctamente",
+ *     ),
+ *     @OA\Response(
+ *         response=204,
+ *         description="Propiedad no encontrada",
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="No autorizado",
+ *     ),
+ *     security={
+ *         {"bearerAuth": {}}
+ *     }
+ * )
+ */
     public function destroy($id)
     {
         if(!$property = Property::find($id)){
@@ -415,6 +620,47 @@ class PropertiesController extends Controller
         return ApiResponseController::response('Eliminado correctamente', 200);
     }
 
+
+    /**
+ * @OA\Get(
+ *     path="/properties/get-features",
+ *     summary="Obtener características",
+ *     tags={"Features"},
+ *     @OA\Response(
+ *         response=200,
+ *         description="Consulta exitosa",
+ *         @OA\JsonContent(
+ *             @OA\Property(
+ *                 property="currencies",
+ *                 type="array",
+ *                 @OA\Items(ref="#/components/schemas/Currency")
+ *             ),
+ *             @OA\Property(
+ *                 property="propertyTypes",
+ *                 type="array",
+ *                 @OA\Items(ref="#/components/schemas/PropertyType")
+ *             ),
+ *             @OA\Property(
+ *                 property="status",
+ *                 type="array",
+ *                 @OA\Items(ref="#/components/schemas/PropertyStatus")
+ *             ),
+ *             @OA\Property(
+ *                 property="contractTypes",
+ *                 type="array",
+ *                 @OA\Items(ref="#/components/schemas/ContractType")
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="No autorizado",
+ *     ),
+ *     security={
+ *         {"bearerAuth": {}}
+ *     }
+ * )
+ */
     public function getFeatures(Request $request)
     {
         $currencies = Currency::all();

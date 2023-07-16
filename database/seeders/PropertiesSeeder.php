@@ -62,6 +62,7 @@ class PropertiesSeeder extends Seeder
                 'kids_area'               => $faker->boolean(),
                 'pets_allowed'            => $faker->boolean(),
                 'central_air_conditioner' => $faker->boolean(),
+                'featured'                => $faker->boolean(),
                 'published_at'            => now()
             ];
         }

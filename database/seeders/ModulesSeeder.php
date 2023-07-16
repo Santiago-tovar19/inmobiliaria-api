@@ -35,13 +35,13 @@ class ModulesSeeder extends Seeder
                 'path'        => 'propiedades',
                 'father_id'   => NULL,
             ],
-            [
-                'name'        => 'Carros',
-                'description' => 'Gestion de carros',
-                'icon'        => 'heroicons_outline:home',
-                'path'        => 'carros',
-                'father_id'   => NULL,
-            ]
+            // [
+            //     'name'        => 'Carros',
+            //     'description' => 'Gestion de carros',
+            //     'icon'        => 'heroicons_outline:home',
+            //     'path'        => 'carros',
+            //     'father_id'   => NULL,
+            // ]
 		]);
     }
 }
