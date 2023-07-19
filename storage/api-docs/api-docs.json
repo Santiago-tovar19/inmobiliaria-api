@@ -736,6 +736,24 @@
                         }
                     },
                     {
+                        "name": "fav",
+                        "in": "query",
+                        "description": "Favorito",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "featured",
+                        "in": "query",
+                        "description": "Destacado",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "orderBy",
                         "in": "query",
                         "description": "Ordenar por columna",
@@ -1035,7 +1053,7 @@
         "/properties/get-features": {
             "get": {
                 "tags": [
-                    "Features"
+                    "Properties"
                 ],
                 "summary": "Obtener características",
                 "operationId": "92608c278e3fcca58b5b6d6f03163f51",
@@ -1085,6 +1103,158 @@
                         "bearerAuth": []
                     }
                 ]
+            }
+        },
+        "/property/{propertyId}/{fav}": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Añadir o eliminar una propiedad de favoritos",
+                "operationId": "c35be1967f3651d4f17cd911ddd3df50",
+                "parameters": [
+                    {
+                        "name": "propertyId",
+                        "in": "path",
+                        "description": "ID de la propiedad",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "fav",
+                        "in": "path",
+                        "description": "Indica si se debe añadir o eliminar la propiedad de favoritos, donde 1 es para añadir a favoritos y 0 es para remover de favoritos",
+                        "required": true,
+                        "schema": {
+                            "type": "int"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Propiedad añadida o eliminada de favoritos con éxito",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Propiedad no encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Propiedad ya está en favoritos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users/sign-up": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Sign up a customer",
+                "description": "Registers a new customer user",
+                "operationId": "ec7c8e497cfda82eafb9fb16218a8c81",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SignUpCustomerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful registration",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registrado exitosamente"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "accessToken": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                                },
+                                                "tokenType": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "user": {
+                                                    "$ref": "#/components/schemas/User"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Credenciales invalidas"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -1158,6 +1328,28 @@
                         "type": "object"
                     }
                 ]
+            },
+            "SignUpCustomerRequest": {
+                "title": "Sign Up Customer Request",
+                "description": "Sign Up Customer Request schema",
+                "properties": {
+                    "email": {
+                        "description": "Email of the customer",
+                        "type": "string",
+                        "example": "johndoe@example.com"
+                    },
+                    "first_name": {
+                        "description": "First name of the customer",
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "password": {
+                        "description": "Password of the customer",
+                        "type": "string",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
             },
             "Car": {
                 "title": "Carro",
@@ -1520,6 +1712,75 @@
                     },
                     "updated_at": {
                         "description": "Last update date of the property type",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User schema",
+                "properties": {
+                    "id": {
+                        "description": "ID of the user",
+                        "type": "integer"
+                    },
+                    "first_name": {
+                        "description": "First name of the user",
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "description": "Last name of the user",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "email": {
+                        "description": "Email of the user",
+                        "type": "string"
+                    },
+                    "phone": {
+                        "description": "Phone number of the user",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "password": {
+                        "description": "Password of the user",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "broker_id": {
+                        "description": "ID of the broker associated with the user",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "role_id": {
+                        "description": "ID of the role assigned to the user",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "img": {
+                        "description": "Image URL of the user",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "verified": {
+                        "description": "Verification status of the user",
+                        "type": "boolean"
+                    },
+                    "email_verified_at": {
+                        "description": "Email verification date of the user",
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Creation date of the user",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update date of the user",
                         "type": "string",
                         "format": "date-time"
                     }

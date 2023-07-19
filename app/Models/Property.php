@@ -94,4 +94,8 @@ class Property extends Model
     {
         return $this->hasMany(PropertyView::class);
     }
+
+    public function favUsers(){
+        return $this->belongsToMany(User::class, 'favs_user_properties', 'property_id', 'user_id');
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SignUpCustomerRequest;
+use App\Models\Property;
 use App\Models\Role;
 use App\Models\User;
 use Carbon\Carbon;
@@ -213,5 +215,142 @@ class UsersController extends Controller
 		$usuario->notify(new \App\Notifications\MailCreateAccount($token, $usuario->email, $rolName));
 
 		return ApiResponseController::response('Correo enviado exitosamente', 200);
+    }
+
+
+    /**
+     * @OA\Post(
+     *     path="/property/{propertyId}/{fav}",
+     *     summary="Añadir o eliminar una propiedad de favoritos",
+     *     tags={"Users"},
+     *     @OA\Parameter( name="propertyId", in="path", description="ID de la propiedad", required=true, @OA\Schema( type="integer", format="int64")
+     *     ),
+     *     @OA\Parameter(name="fav",in="path",description="Indica si se debe añadir o eliminar la propiedad de favoritos, donde 1 es para añadir a favoritos y 0 es para remover de favoritos",required=true,@OA\Schema(type="int")),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Propiedad añadida o eliminada de favoritos con éxito",
+     *           @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *           )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Propiedad no encontrada",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *           )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Propiedad ya está en favoritos",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string"),
+     *           )
+     *     ),
+     *     security={
+     *         {"bearerAuth": {}}
+     *     }
+     * )
+     */
+    public function setFavProperty(Request $request, $propertyId, $fav){
+
+        if(!$property = Property::find($propertyId)){
+            return ApiResponseController::response('Propiedad no encontrada', 404);
+        }
+
+        $user = $request->user();
+
+        if($fav){
+            // Check if property is already in favs
+            if($user->favProperties()->where('property_id', $propertyId)->first()){
+                return ApiResponseController::response('Propiedad ya esta en favoritos', 422);
+            }
+            $user->favProperties()->attach($propertyId);
+        }
+
+        if(!$fav){
+            $user->favProperties()->detach($propertyId);
+        }
+
+        return ApiResponseController::response('Propiedad añadida a favoritos', 200);
+
+    }
+
+
+    /**
+     * @OA\Post(
+     *     path="/api/users/sign-up",
+     *     summary="Sign up a customer",
+     *     description="Registers a new customer user",
+     *     tags={"Users"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/SignUpCustomerRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful registration",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Registrado exitosamente"
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="accessToken",
+     *                     type="string",
+     *                     example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+     *                 ),
+     *                 @OA\Property(
+     *                     property="tokenType",
+     *                     type="string",
+     *                     example="bearer"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="user",
+     *                     ref="#/components/schemas/User"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Invalid credentials",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="Credenciales invalidas"
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function signUpCustomer(SignUpCustomerRequest $request){
+
+        User::create([
+            'email' => $request->email,
+            'first_name' => $request->first_name,
+            'password' => bcrypt($request->password),
+            'role_id' => Role::where('name', 'Consumidor')->first()->id,
+        ]);
+
+        // Get user
+        $user = User::where('email', $request->email)->first();
+
+        if (! $token = auth('api')->tokenById($user->id)) {
+            return ApiResponseController::response('Credenciales invalidas', 401);
+        }
+
+        $data = [
+			'accessToken' => $token,
+			'tokenType' => 'bearer',
+			'user' => $user
+		];
+
+        return ApiResponseController::response('Registrado exitosamente', 200, $data);
     }
 }

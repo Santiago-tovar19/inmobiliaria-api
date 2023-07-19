@@ -9,6 +9,89 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @OA\Schema(
+ *     schema="User",
+ *     title="User",
+ *     description="User schema",
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         description="ID of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="first_name",
+ *         type="string",
+ *         description="First name of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="last_name",
+ *         type="string",
+ *         nullable=true,
+ *         description="Last name of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         description="Email of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="phone",
+ *         type="string",
+ *         nullable=true,
+ *         description="Phone number of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="password",
+ *         type="string",
+ *         nullable=true,
+ *         description="Password of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="broker_id",
+ *         type="integer",
+ *         nullable=true,
+ *         description="ID of the broker associated with the user"
+ *     ),
+ *     @OA\Property(
+ *         property="role_id",
+ *         type="integer",
+ *         nullable=true,
+ *         description="ID of the role assigned to the user"
+ *     ),
+ *     @OA\Property(
+ *         property="img",
+ *         type="string",
+ *         nullable=true,
+ *         description="Image URL of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="verified",
+ *         type="boolean",
+ *         description="Verification status of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="email_verified_at",
+ *         type="string",
+ *         format="date-time",
+ *         nullable=true,
+ *         description="Email verification date of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at",
+ *         type="string",
+ *         format="date-time",
+ *         description="Creation date of the user"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at",
+ *         type="string",
+ *         format="date-time",
+ *         description="Last update date of the user"
+ *     )
+ * )
+ */
+
 class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -19,7 +102,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
         'email',
         'password',
     ];
@@ -89,5 +172,9 @@ class User extends Authenticatable implements JWTSubject
     public function country()
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function favProperties(){
+        return $this->belongsToMany(Property::class, 'favs_user_properties', 'user_id', 'property_id');
     }
 }

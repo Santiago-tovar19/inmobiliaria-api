@@ -42,21 +42,28 @@ Route::get('get-all-roles', $basePathController.'EntityPropertiesController@getA
 Route::get('test', $basePathController.'TestController@index');
 
 
+// Properties
 Route::get('properties/get-features', $basePathController.'PropertiesController@getFeatures');
 Route::get('properties/get-feature-properties', $basePathController.'PropertiesController@getFeatureProperties');
 Route::post('properties/register-view', $basePathController.'PropertiesController@registerView');
+Route::resource('properties', $basePathController.'PropertiesController');
+
+
+// Users
+Route::post('users/complete-signup/{token}', $basePathController.'UsersController@completeSignUp');
+Route::post('users/signup-costumer', $basePathController.'UsersController@signUpCustomer');
+
 Route::group(['middleware' => ['api_access']], function () use ($basePathController) {
-    // Route::get('properties/{id}', $basePathController.'PropertiesController@show');
+
     Route::get('/dashboard/adminmaster', $basePathController.'DashboardController@getAdmindMasterData');
+
+    // Users
     Route::get('users/resend-signup-email/{id}', $basePathController.'UsersController@resendSignUpEmail');
+    Route::post('users/fav/{propertyId}/{fav}', $basePathController.'UsersController@setFavProperty');
+    Route::get('set-property-fav/{propertyId}/{fav}', $basePathController.'UsersController@setFavProperty');
     Route::resource('users', $basePathController.'UsersController');
-
-
 });
 
-Route::resource('cars', $basePathController.'CarsController');
-// Route::get('properties/{id}', $basePathController.'PropertiesController@show');
-Route::post('users/complete-signup/{token}', $basePathController.'UsersController@completeSignUp');
 
 Route::get('brokers/get-all', $basePathController.'BrokersController@getAll');
 

@@ -12,6 +12,7 @@ use App\Models\PropertyView;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PropertiesController extends Controller
 {
@@ -57,6 +58,8 @@ class PropertiesController extends Controller
  *     @OA\Parameter(name="pets_allowed", in="query", description="Mascotas permitidas", required=false, @OA\Schema(type="integer")),
  *     @OA\Parameter(name="central_air_conditioner", in="query", description="Aire acondicionado central", required=false, @OA\Schema(type="integer")),
  *     @OA\Parameter(name="published", in="query", description="Publicado", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="fav", in="query", description="Favorito", required=false, @OA\Schema(type="integer")),
+ *     @OA\Parameter(name="featured", in="query", description="Destacado", required=false, @OA\Schema(type="integer")),
  *     @OA\Parameter(name="orderBy", in="query", description="Ordenar por columna", required=false, @OA\Schema(type="string")),
  *     @OA\Parameter(name="order", in="query", description="Ordenar ascendentemente o descendentemente", required=false, @OA\Schema(type="string")),
  *
@@ -111,14 +114,12 @@ class PropertiesController extends Controller
  */
     public function index(Request $request)
     {
-        $user = $request->user();
-
         $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
 
         $query = Property::with('propertyType', 'status', 'currency', 'contractType');
 
         // Filtrar por columnas comúnmente utilizadas para buscar propiedades
-        $searchColumns = [ "name", "description", "property_type_id", "address", "mls_number", "construction_year", "location_type", "bedrooms", "bathrooms", "size", "price", "currency_id", "status_id", "contract_type_id", "parking", "kitchen", "elevator", "wifi", "fireplace", "hoa", "stories", "exclusions", "level", "security", "lobby", "balcony", "terrace", "power_plant", "gym", "walk_in_closet", "swimming_pool", "kids_area", "pets_allowed", "central_air_conditioner", "published"];
+        $searchColumns = [ "name", "description", "property_type_id", "address", "mls_number", "construction_year", "location_type", "bedrooms", "bathrooms", "size", "price", "currency_id", "status_id", "contract_type_id", "parking", "kitchen", "elevator", "wifi", "fireplace", "hoa", "stories", "exclusions", "level", "security", "lobby", "balcony", "terrace", "power_plant", "gym", "walk_in_closet", "swimming_pool", "kids_area", "pets_allowed", "central_air_conditioner", "featured", "published"];
         foreach ($searchColumns as $column) {
             if ($request->filled($column)) {
                 $query->where($column, 'LIKE', '%' . $request->input($column) . '%');
@@ -127,6 +128,18 @@ class PropertiesController extends Controller
             if ($request->filled('orderBy') && $request->filled('order')) {
                 $query->orderBy($request->input('orderBy'), $request->input('order'));
             }
+        }
+
+        if($request->input("fav")){
+            $query->whereHas('favUsers', function($q) {
+                try{
+                    $user = JWTAuth::parseToken()->authenticate();
+                    $q->where('user_id', $user->id);
+                } catch (\Exception $e) {}
+
+                return $q;
+
+            });
         }
 
         $properties = $query->paginate($perPage);
@@ -625,7 +638,7 @@ class PropertiesController extends Controller
  * @OA\Get(
  *     path="/properties/get-features",
  *     summary="Obtener características",
- *     tags={"Features"},
+ *     tags={"Properties"},
  *     @OA\Response(
  *         response=200,
  *         description="Consulta exitosa",
