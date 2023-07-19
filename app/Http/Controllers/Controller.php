@@ -14,9 +14,8 @@ use Illuminate\Routing\Controller as BaseController;
  *         title="API Inmobiliaria",
  *         description="API para gestionar recursos de una inmobiliaria"
  *     ),
- *     @OA\Server(
- *         url="https://projects.andresjosehr.com/api-inmobiliaria/api"
- *     )
+ *     @OA\Server(url="https://projects.andresjosehr.com/api-inmobiliaria/api"),
+ *     @OA\Server(url="http://localhost:8000/api")
  * )
  */
 

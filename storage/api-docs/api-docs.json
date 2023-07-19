@@ -8,6 +8,9 @@
     "servers": [
         {
             "url": "https://projects.andresjosehr.com/api-inmobiliaria/api"
+        },
+        {
+            "url": "http://localhost:8000/api"
         }
     ],
     "paths": {
@@ -1105,13 +1108,13 @@
                 ]
             }
         },
-        "/property/{propertyId}/{fav}": {
-            "post": {
+        "/users/set-property-fav/{propertyId}/{fav}": {
+            "get": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Añadir o eliminar una propiedad de favoritos",
-                "operationId": "c35be1967f3651d4f17cd911ddd3df50",
+                "operationId": "2d7d5cde70e9356d681baae3b4305491",
                 "parameters": [
                     {
                         "name": "propertyId",
@@ -1129,7 +1132,8 @@
                         "description": "Indica si se debe añadir o eliminar la propiedad de favoritos, donde 1 es para añadir a favoritos y 0 es para remover de favoritos",
                         "required": true,
                         "schema": {
-                            "type": "int"
+                            "type": "integer",
+                            "format": "int64"
                         }
                     }
                 ],
@@ -1187,14 +1191,14 @@
                 ]
             }
         },
-        "/api/users/sign-up": {
+        "/users/signup-costumer": {
             "post": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Sign up a customer",
                 "description": "Registers a new customer user",
-                "operationId": "ec7c8e497cfda82eafb9fb16218a8c81",
+                "operationId": "2802a3a40852097bf86731164000ed4b",
                 "requestBody": {
                     "required": true,
                     "content": {

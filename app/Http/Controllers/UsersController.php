@@ -219,13 +219,13 @@ class UsersController extends Controller
 
 
     /**
-     * @OA\Post(
-     *     path="/property/{propertyId}/{fav}",
+     * @OA\Get(
+     *     path="/users/set-property-fav/{propertyId}/{fav}",
      *     summary="Añadir o eliminar una propiedad de favoritos",
      *     tags={"Users"},
      *     @OA\Parameter( name="propertyId", in="path", description="ID de la propiedad", required=true, @OA\Schema( type="integer", format="int64")
      *     ),
-     *     @OA\Parameter(name="fav",in="path",description="Indica si se debe añadir o eliminar la propiedad de favoritos, donde 1 es para añadir a favoritos y 0 es para remover de favoritos",required=true,@OA\Schema(type="int")),
+     *     @OA\Parameter(name="fav",in="path",description="Indica si se debe añadir o eliminar la propiedad de favoritos, donde 1 es para añadir a favoritos y 0 es para remover de favoritos",required=true, @OA\Schema(type="integer", format="int64")),
      *     @OA\Response(
      *         response=200,
      *         description="Propiedad añadida o eliminada de favoritos con éxito",
@@ -279,7 +279,7 @@ class UsersController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/users/sign-up",
+     *     path="/users/signup-costumer",
      *     summary="Sign up a customer",
      *     description="Registers a new customer user",
      *     tags={"Users"},

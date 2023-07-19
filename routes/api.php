@@ -60,7 +60,7 @@ Route::group(['middleware' => ['api_access']], function () use ($basePathControl
     // Users
     Route::get('users/resend-signup-email/{id}', $basePathController.'UsersController@resendSignUpEmail');
     Route::post('users/fav/{propertyId}/{fav}', $basePathController.'UsersController@setFavProperty');
-    Route::get('set-property-fav/{propertyId}/{fav}', $basePathController.'UsersController@setFavProperty');
+    Route::get('users/set-property-fav/{propertyId}/{fav}', $basePathController.'UsersController@setFavProperty');
     Route::resource('users', $basePathController.'UsersController');
 });
 
