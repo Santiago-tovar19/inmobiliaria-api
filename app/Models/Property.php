@@ -53,7 +53,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *     @OA\Property(property="central_air_conditioner", type="integer", default=0),
  *     @OA\Property(property="published", type="integer", default=0),
  *     @OA\Property(property="created_by", type="integer", nullable=true),
- *     @OA\Property(property="published_at", type="string", nullable=true)
+ *     @OA\Property(property="published_at", type="string", nullable=true),
+ *     @OA\Property(property="property_images", type="array", @OA\Items(ref="#/components/schemas/PropertyImage"), description="Imagenes asociadas a la propiedad")
  * )
  */
 

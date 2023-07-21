@@ -1668,6 +1668,47 @@
                     "published_at": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "property_images": {
+                        "description": "Imagenes asociadas a la propiedad",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PropertyImage"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PropertyImage": {
+                "title": "Property Image",
+                "description": "Property Image schema",
+                "properties": {
+                    "id": {
+                        "description": "ID of the property image",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "Name of the property image",
+                        "type": "string"
+                    },
+                    "property_id": {
+                        "description": "ID of the property associated with the image",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "type": {
+                        "description": "Type of the image ('Banner' or 'Gallery')",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Creation date of the property image",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Last update date of the property image",
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"

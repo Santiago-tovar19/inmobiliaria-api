@@ -116,7 +116,7 @@ class PropertiesController extends Controller
     {
         $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
 
-        $query = Property::with('propertyType', 'status', 'currency', 'contractType');
+        $query = Property::with('propertyType', 'status', 'images', 'currency', 'contractType');
 
         // Filtrar por columnas comúnmente utilizadas para buscar propiedades
         $searchColumns = [ "name", "description", "property_type_id", "address", "mls_number", "construction_year", "location_type", "bedrooms", "bathrooms", "size", "price", "currency_id", "status_id", "contract_type_id", "parking", "kitchen", "elevator", "wifi", "fireplace", "hoa", "stories", "exclusions", "level", "security", "lobby", "balcony", "terrace", "power_plant", "gym", "walk_in_closet", "swimming_pool", "kids_area", "pets_allowed", "central_air_conditioner", "featured", "published"];
@@ -234,7 +234,13 @@ class PropertiesController extends Controller
     {
 
         // Get the authenticated user
-        $user = $request->user();
+        $user = null;
+        try{
+            $user = JWTAuth::parseToken()->authenticate();
+
+        } catch (\Exception $e) {}
+
+
         $images = $request->images;
         $imgs = [];
         if($images) {
@@ -377,9 +383,13 @@ class PropertiesController extends Controller
  */
     public function show(Request $request, $id)
     {
-        $user = $request->user();
+        $isAdmin = false;
+        try{
+            $isAdmin = JWTAuth::parseToken()->authenticate()->role_id === 1;
 
-        !$property = Property::when($user->role_id===1, function($q) use ($request) {
+        } catch (\Exception $e) {}
+
+        !$property = Property::when($isAdmin, function($q) use ($request) {
             return $q->withTrashed();
         })->find($id);
 
@@ -447,9 +457,13 @@ class PropertiesController extends Controller
  */
     public function update(Request $request, $id)
     {
-        $user = $request->user();
+        $isAdmin = false;
+        try{
+            $isAdmin = JWTAuth::parseToken()->authenticate()->role_id === 1;
 
-        !$property = Property::when($user->role_id===1, function($q) use ($request) {
+        } catch (\Exception $e) {}
+
+        !$property = Property::when($isAdmin, function($q) use ($request) {
             return $q->withTrashed();
         })->find($id);
 

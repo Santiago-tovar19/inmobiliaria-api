@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Property;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -72,18 +73,36 @@ class PropertiesSeeder extends Seeder
 
         $properties = DB::table('properties')->get();
 
-        foreach ($properties as $property) {
-            $images = [];
-            for ($i=0; $i < 5; $i++) {
-                $images[] = [
-                    'property_id' => $property->id,
-                    'name' => $faker->imageUrl(1980, 1280),
-                    'type' => $faker->randomElement(['Banner', 'Gallery']),
-                    'created_at' => now(),
-                    'updated_at' => now()
+        // foreach ($properties as $property) {
+        //     $images = [];
+        //     for ($i=0; $i < 5; $i++) {
+        //         $images[] = [
+        //             'property_id' => $property->id,
+        //             'name' => $faker->imageUrl(1980, 1280),
+        //             'type' => $faker->randomElement(['Banner', 'Gallery']),
+        //             'created_at' => now(),
+        //             'updated_at' => now()
+        //         ];
+        //     }
+        //     DB::table('property_images')->insert($images);
+        // }
+
+        // GET ALL PROPERTIES
+        $properties = Property::all();
+
+        foreach($properties as $property) {
+            $img = [];
+            for ($i=0; $i < $faker->numberBetween(1, 3); $i++) {
+
+                $img[] = [
+                    "name" => $faker->numberBetween(1, 40). ".jpg",
+                    'type' => $i == 0 ? 'Banner' : 'Gallery',
                 ];
             }
-            DB::table('property_images')->insert($images);
+
+            $property->images()->createMany($img);
+
         }
+
     }
 }
