@@ -702,4 +702,13 @@ class PropertiesController extends Controller
             'contractTypes' => $contractTypes
         ]);
     }
+
+
+
+    public function getPropertyTypes(Request $request)
+    {
+        $propertyTypes = PropertyType::withCount('properties')->get();
+
+        return ApiResponseController::response('Consulta exitosa', 200, $propertyTypes);
+    }
 }

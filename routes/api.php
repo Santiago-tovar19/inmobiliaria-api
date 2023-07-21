@@ -46,6 +46,7 @@ Route::get('test', $basePathController.'TestController@index');
 Route::get('properties/get-features', $basePathController.'PropertiesController@getFeatures');
 Route::get('properties/get-feature-properties', $basePathController.'PropertiesController@getFeatureProperties');
 Route::post('properties/register-view', $basePathController.'PropertiesController@registerView');
+Route::get('properties/get-property-types', $basePathController.'PropertiesController@getPropertyTypes');
 Route::resource('properties', $basePathController.'PropertiesController');
 
 
