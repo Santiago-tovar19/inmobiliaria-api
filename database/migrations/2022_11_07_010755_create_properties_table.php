@@ -66,6 +66,8 @@ return new class extends Migration
 
             $table->bigInteger('created_by')->unsigned()->nullable();
 			$table->foreign('created_by')->references('id')->on('users'); // Tipo de contrato (Venta, Alquiler)
+            $table->bigInteger('broker_id')->unsigned()->nullable();
+            $table->foreign('broker_id')->references('id')->on('brokers');
 
             $table->string('published_at')->nullable(); // Fecha Publicada
             $table->softDeletes();

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UsersController extends Controller
 {
@@ -19,23 +20,28 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
     public function index(Request $request)
-    {
-        $user = $request->user();
+{
+    $usuario = JWTAuth::parseToken()->authenticate();
+    $user = $request->user();
+    $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
 
-        $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
-
-		$users = User::with('role')
+    $users = User::with('role')
         ->when($request->termino, function($q) use ($request) {
-            $q->orWhere('first_name', 'like', '%'.$request->termino.'%')
-            ->orWhere('email', 'like', '%'.$request->termino.'%');
+            $q->orWhere('first_name', 'like', '%' . $request->termino . '%')
+              ->orWhere('email', 'like', '%' . $request->termino . '%');
+        })
+         ->when($usuario->role_id === 2, function ($q) use ($usuario) {
+            // Filtro por broker_id si el usuario es un admin (rol 2)
+            $q->where('broker_id', $usuario->broker_id);
         })
         ->where('id', '!=', $user->id)
-
         ->paginate($perPage);
 
-        return ApiResponseController::response('Consulta Exitosa', 200, $users);
-    }
+    return ApiResponseController::response('Consulta Exitosa', 200, $users);
+}
 
     /**
      * Show the form for creating a new resource.
@@ -56,6 +62,9 @@ class UsersController extends Controller
     public function store(Request $request)
     {
 
+
+        $usuario = JWTAuth::parseToken()->authenticate();
+
         // If file exist
         $imgName = null;
         if ($request->hasFile('img')) {
@@ -68,7 +77,13 @@ class UsersController extends Controller
         $user             = new User();
         $user->first_name = $request->first_name;
         $user->last_name  = $request->last_name;
-        $user->broker_id  = $request->broker_id;
+        $user->broker_id  = $usuario->broker_id;
+        if($usuario->role_id === 1){
+            $user->broker_id = $request->broker_id;
+        }
+
+
+
         $user->email      = $request->email;
         $user->img        = $imgName;
         $user->phone      = $request->phone;

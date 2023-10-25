@@ -23,6 +23,8 @@ class ModuleRoleSeeder extends Seeder
         $modules = Module::where('name', '<>', 'Datos Estudiante')->get();
 
         DB::table('module_role')->insert([
+
+            // Rol de Master admin
             [
                 'module_id' => DB::table('modules')->where('name', 'Usuarios')->first()->id,
                 'role_id'   => Role::where('name', 'Master Admin')->first()->id
@@ -33,10 +35,18 @@ class ModuleRoleSeeder extends Seeder
             ],
 
 
+            // Rol de Admin
             [
                 'module_id' => DB::table('modules')->where('name', 'Propiedades')->first()->id,
                 'role_id'   => Role::where('name', 'Admin')->first()->id
             ],
+            [
+                'module_id' => DB::table('modules')->where('name', 'Usuarios')->first()->id,
+                'role_id'   => Role::where('name', 'Admin')->first()->id
+            ],
+
+
+            // Rol de agente
 
             [
                 'module_id' => DB::table('modules')->where('name', 'Propiedades')->first()->id,

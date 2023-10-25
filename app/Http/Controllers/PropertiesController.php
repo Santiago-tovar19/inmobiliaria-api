@@ -112,41 +112,51 @@ class PropertiesController extends Controller
  *     )
  * )
  */
-    public function index(Request $request)
-    {
-        $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
+public function index(Request $request)
+{
+    $perPage = $request->input('perPage') ? $request->input('perPage') : 10;
 
-        $query = Property::with('propertyType', 'status', 'images', 'currency', 'contractType');
+    $query = Property::with('propertyType', 'status', 'images', 'currency', 'contractType');
 
-        // Filtrar por columnas comúnmente utilizadas para buscar propiedades
-        $searchColumns = [ "name", "description", "property_type_id", "address", "mls_number", "construction_year", "location_type", "bedrooms", "bathrooms", "size", "price", "currency_id", "status_id", "contract_type_id", "parking", "kitchen", "elevator", "wifi", "fireplace", "hoa", "stories", "exclusions", "level", "security", "lobby", "balcony", "terrace", "power_plant", "gym", "walk_in_closet", "swimming_pool", "kids_area", "pets_allowed", "central_air_conditioner", "featured", "published"];
-        foreach ($searchColumns as $column) {
-            if ($request->filled($column)) {
-                $query->where($column, 'LIKE', '%' . $request->input($column) . '%');
-            }
-            // order by
-            if ($request->filled('orderBy') && $request->filled('order')) {
-                $query->orderBy($request->input('orderBy'), $request->input('order'));
-            }
+    // Filtrar por columnas comúnmente utilizadas para buscar propiedades
+    $searchColumns = ["name", "description", "property_type_id", "address", "mls_number", "construction_year", "location_type", "bedrooms", "bathrooms", "size", "price", "currency_id", "status_id", "contract_type_id", "parking", "kitchen", "elevator", "wifi", "fireplace", "hoa", "stories", "exclusions", "level", "security", "lobby", "balcony", "terrace", "power_plant", "gym", "walk_in_closet", "swimming_pool", "kids_area", "pets_allowed", "central_air_conditioner", "featured", "published"];
+
+    foreach ($searchColumns as $column) {
+        if ($request->filled($column)) {
+            $query->where($column, 'LIKE', '%' . $request->input($column) . '%');
         }
 
-        if($request->input("fav")){
-            $query->whereHas('favUsers', function($q) {
-                try{
-                    $user = JWTAuth::parseToken()->authenticate();
-                    $q->where('user_id', $user->id);
-                } catch (\Exception $e) {}
-
-                return $q;
-
-            });
+        // order by
+        if ($request->filled('orderBy') && $request->filled('order')) {
+            $query->orderBy($request->input('orderBy'), $request->input('order'));
         }
-
-        $properties = $query->paginate($perPage);
-
-        return ApiResponseController::response('Consulta Exitosa', 200, $properties);
     }
 
+    try {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if ($user->role_id === 2) {
+            // Administrador (rol 2): Filtre por broker_id
+            $query->where('broker_id', $user->broker_id);
+        }
+        if ($user->role_id === 3) {
+            // Agente (rol 3): Filtre por created_by
+            $query->where('created_by', $user->id);
+        }
+    } catch (\Exception $e) {
+        // Manejar la excepción si no se puede autenticar al usuario
+    }
+
+    if ($request->input("fav")) {
+        $query->whereHas('favUsers', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        });
+    }
+
+    $properties = $query->paginate($perPage);
+
+    return ApiResponseController::response('Consulta Exitosa', 200, $properties);
+}
 
     public function getFeatureProperties(Request $request)
     {

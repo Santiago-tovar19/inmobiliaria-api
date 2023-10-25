@@ -99,4 +99,9 @@ class Property extends Model
     public function favUsers(){
         return $this->belongsToMany(User::class, 'favs_user_properties', 'property_id', 'user_id');
     }
+
+    public function broker()
+    {
+        return $this->belongsTo(Broker::class);
+    }
 }
