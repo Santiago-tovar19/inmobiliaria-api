@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\broker;
 use Illuminate\Http\Request;
 
 class BrokersController extends Controller
 {
     public function getAll(Request $request)
     {
-        $brokers = \App\Models\Broker::all();
+        $brokers = broker::all();
         return ApiResponseController::response('Success', 200, $brokers);
     }
 }
