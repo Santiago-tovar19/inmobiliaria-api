@@ -47,7 +47,7 @@ class EntityPropertiesController extends Controller
     // Verificar si el ID del usuario es igual a 1
     if ($roleId->role_id != 1) {
         // Si el ID del usuario no es igual a 1, obtener todos los roles excluyendo el registro con role_id igual a uno
-        $roles = Role::where("role_id", '!=', 1)->get();
+        $roles = Role::where("id", '!=', 1)->get();
     } else {
         // Si el ID del usuario es igual a 1, obtener todos los roles, incluyendo el registro con role_id igual a uno
         $roles = Role::all();
