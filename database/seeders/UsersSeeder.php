@@ -26,6 +26,7 @@ class UsersSeeder extends Seeder
 						'email'             => 'andresjosehr@gmail.com',
 						'password'          => 'Paralelepipe2',
 						'email_verified_at' => now(),
+                        'broker_id' => null,
 						'role_id'           => DB::table('roles')->where('name', 'Master Admin')->first()->id,
 					],
                     [
@@ -33,6 +34,7 @@ class UsersSeeder extends Seeder
 						'email'             => 'adminmaster@gmail.com',
 						'password'          => 'adminmaster',
 						'email_verified_at' => now(),
+                        'broker_id' => null,
 						'role_id'           => DB::table('roles')->where('name', 'Master Admin')->first()->id,
 					],
                     [
@@ -40,6 +42,7 @@ class UsersSeeder extends Seeder
 						'email'             => 'admin@gmail.com',
 						'password'          => 'admin',
 						'email_verified_at' => now(),
+                        'broker_id' => 1,
 						'role_id'           => DB::table('roles')->where('name', 'Admin')->first()->id,
 					],
                     [
@@ -47,6 +50,7 @@ class UsersSeeder extends Seeder
 						'email'             => 'agente@gmail.com',
 						'password'          => 'agente',
 						'email_verified_at' => now(),
+                        'broker_id' => null,
 						'role_id'           => DB::table('roles')->where('name', 'Agente')->first()->id,
 					],
                     [
@@ -54,6 +58,7 @@ class UsersSeeder extends Seeder
 						'email'             => 'consumidor@gmail.com',
 						'password'          => 'consumidor',
 						'email_verified_at' => now(),
+                        'broker_id' => null,
 						'role_id'           => DB::table('roles')->where('name', 'Consumidor')->first()->id,
 					],
 				];
@@ -67,9 +72,12 @@ class UsersSeeder extends Seeder
 							'password' => bcrypt($user['password']),
                             'email_verified_at' => $user['email_verified_at'],
                             'role_id' => $user['role_id'],
+                            'broker_id' => $user['broker_id'],
 						]);
 					}
 				}
+
+
 
 
     }

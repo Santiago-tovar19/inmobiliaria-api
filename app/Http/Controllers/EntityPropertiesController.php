@@ -38,21 +38,21 @@ class EntityPropertiesController extends Controller
     //     return ApiResponseController::response('Exito', 200, \App\Models\Role::all());
     // }
 
-    public function getAllRoles(Request $request)
-{
+//     public function getAllRoles(Request $request)
+// {
 
-    // Obtener el ID del usuario autenticado
-    $roleId = JWTAuth::parseToken()->authenticate();
+//     // Obtener el ID del usuario autenticado
+//     $roleId = JWTAuth::parseToken()->authenticate();
 
-    // Verificar si el ID del usuario es igual a 1
-    if ($roleId->role_id != 1) {
-        // Si el ID del usuario no es igual a 1, obtener todos los roles excluyendo el registro con role_id igual a uno
-        $roles = Role::where("id", '!=', 1)->get();
-    } else {
-        // Si el ID del usuario es igual a 1, obtener todos los roles, incluyendo el registro con role_id igual a uno
-        $roles = Role::all();
-    }
+//     // Verificar si el ID del usuario es igual a 1
+//     if ($roleId->role_id != 1) {
+//         // Si el ID del usuario no es igual a 1, obtener todos los roles excluyendo el registro con role_id igual a uno
+//         $roles = Role::where("id", '!=', 1)->get();
+//     } else {
+//         // Si el ID del usuario es igual a 1, obtener todos los roles, incluyendo el registro con role_id igual a uno
+//         $roles = Role::all();
+//     }
 
-    return ApiResponseController::response('Éxito', 200, $roles);
-}
+//     return ApiResponseController::response('Éxito', 200, $roles);
+// }
 }

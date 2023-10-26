@@ -64,7 +64,8 @@ class PropertiesSeeder extends Seeder
                 'pets_allowed'            => $faker->boolean(),
                 'central_air_conditioner' => $faker->boolean(),
                 'featured'                => $faker->boolean(),
-                'published_at'            => now()
+                'published_at'            => now(),
+                'broker_id' => $faker->numberBetween(1, 10),
             ];
         }
 
