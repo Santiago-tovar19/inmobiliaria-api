@@ -33,7 +33,10 @@ class ModuleRoleSeeder extends Seeder
                 'module_id' => DB::table('modules')->where('name', 'Propiedades')->first()->id,
                 'role_id'   => Role::where('name', 'Master Admin')->first()->id
             ],
-
+            [
+                'module_id' => DB::table('modules')->where('name', 'Reportes')->first()->id,
+                'role_id'   => Role::where('name', 'Master Admin')->first()->id
+            ],
 
             // Rol de Admin
             [
@@ -44,12 +47,19 @@ class ModuleRoleSeeder extends Seeder
                 'module_id' => DB::table('modules')->where('name', 'Usuarios')->first()->id,
                 'role_id'   => Role::where('name', 'Admin')->first()->id
             ],
-
+            [
+                'module_id' => DB::table('modules')->where('name', 'Reportes')->first()->id,
+                'role_id'   => Role::where('name', 'Admin')->first()->id
+            ],
 
             // Rol de agente
 
             [
                 'module_id' => DB::table('modules')->where('name', 'Propiedades')->first()->id,
+                'role_id'   => Role::where('name', 'Agente')->first()->id
+            ],
+            [
+                'module_id' => DB::table('modules')->where('name', 'Reportes')->first()->id,
                 'role_id'   => Role::where('name', 'Agente')->first()->id
             ],
 

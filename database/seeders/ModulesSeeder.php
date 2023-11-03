@@ -35,6 +35,13 @@ class ModulesSeeder extends Seeder
                 'path'        => 'propiedades',
                 'father_id'   => NULL,
             ],
+            [
+                'name'        => 'Reportes',
+                'description' => 'Gestor de Reportes',
+                'icon'        => 'heroicons_outline:chart-bar',
+                'path'        => 'reportes',
+                'father_id'   => NULL,
+            ],
             // [
             //     'name'        => 'Carros',
             //     'description' => 'Gestion de carros',

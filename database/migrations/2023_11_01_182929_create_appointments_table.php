@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('property_views', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('property_id')->unsigned()->nullable();
-			$table->foreign('property_id')->references('id')->on('properties');
-            $table->bigInteger('user_id')->unsigned()->nullable();
-			$table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('property_id')->references('id')->on('properties');
+            $table->string('email');
+            $table->string('phone');
+            $table->text('message')->nullable();
             $table->integer('day_of_week')->nullable();
             $table->timestamps();
         });
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('property_views');
+        Schema::dropIfExists('appointments');
     }
 };

@@ -176,13 +176,45 @@ public function index(Request $request)
     {
         $userID = $request->input('userID');
         $propertyID = $request->input('propertyID');
+        $brokerID = $request->input('brokerID');
+        $today = now();
+        $dayOfWeek = $today->dayOfWeek;
 
-        $propertyView = PropertyView::create([
-            'user_id' => $userID,
-            'property_id' => $propertyID
-        ]);
+        $propertyView = new PropertyView();
+        $propertyView->property_id = $propertyID;
+        $propertyView->user_id = $userID;
+        $propertyView->day_of_week = $dayOfWeek;
+        $propertyView->save();
 
-        return ApiResponseController::response('Consulta Exitosa', 200, $propertyView);
+        return ApiResponseController::response('Consulta Exitosa, se guardo lo visita', 200, $propertyView);
+    }
+
+    public function getPropertyViews(Request $request){
+
+        $usuario = JWTAuth::parseToken()->authenticate();
+
+        if($usuario->role_id === 1){
+            $propertyViews = PropertyView::all();
+            return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
+        }
+        if($usuario->role_id === 2){
+            $broker_id = $usuario->broker_id;
+            $properties_ids = Property::where('broker_id', $broker_id)->get()->pluck('id')->toArray();
+           $propertyViews =  PropertyView::whereHas('property', function($q) use ($properties_ids){
+                $q->whereIn('id', $properties_ids);
+            })->get();
+            return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
+        }
+        if($usuario->role_id === 3){
+            $agente_id = $usuario->id;
+            $properties_ids = Property::where('created_by', $agente_id)->get()->pluck('id')->toArray();
+            $propertyViews =  PropertyView::whereHas('property', function($q) use ($properties_ids){
+                $q->whereIn('id', $properties_ids);
+            })->get();
+            return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
+        }
+
+
     }
 
     /**

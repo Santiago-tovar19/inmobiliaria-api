@@ -269,25 +269,49 @@ class UsersController extends Controller
      */
     public function setFavProperty(Request $request, $propertyId, $fav){
 
-        if(!$property = Property::find($propertyId)){
-            return ApiResponseController::response('Propiedad no encontrada', 404);
-        }
+        // if(!$property = Property::find($propertyId)){
+        //     return ApiResponseController::response('Propiedad no encontrada', 404);
+        // }
+
+        // $user = $request->user();
+
+        // if($fav){
+        //     // Check if property is already in favs
+        //     if($user->favProperties()->where('property_id', $propertyId)->first()){
+        //         return ApiResponseController::response('Propiedad ya esta en favoritos', 422);
+        //     }
+        //     $user->favProperties()->attach($propertyId);
+        // }
+
+        // if(!$fav){
+        //     $user->favProperties()->detach($propertyId);
+        // }
+
+        // return ApiResponseController::response($fav, 200);
 
         $user = $request->user();
 
-        if($fav){
-            // Check if property is already in favs
-            if($user->favProperties()->where('property_id', $propertyId)->first()){
-                return ApiResponseController::response('Propiedad ya esta en favoritos', 422);
+        if ($fav) {
+            // Verificar si la propiedad ya está en favoritos
+            if ($user->favProperties()->where('property_id', $propertyId)->first()) {
+                // La propiedad ya está en favoritos y se eliminará
+                $user->favProperties()->detach($propertyId);
+                return ApiResponseController::response(0, 200); // Devolver 1 para indicar que se eliminó
+            } else {
+                // La propiedad no está en favoritos y se agregará
+                $user->favProperties()->attach($propertyId);
+                return ApiResponseController::response(1, 200); // Devolver 0 para indicar que se agregó
             }
-            $user->favProperties()->attach($propertyId);
+        } else {
+            // Verificar si la propiedad está en favoritos
+            if ($user->favProperties()->where('property_id', $propertyId)->first()) {
+                // La propiedad ya está en favoritos
+                return ApiResponseController::response(1,200); // Devolver 1 para indicar que ya está en favoritos
+            } else {
+                // La propiedad no está en favoritos
+                return ApiResponseController::response(0, 200); // Devolver 0 para indicar que no está en favoritos
+            }
         }
-
-        if(!$fav){
-            $user->favProperties()->detach($propertyId);
-        }
-
-        return ApiResponseController::response('Propiedad añadida a favoritos', 200);
 
     }
 
