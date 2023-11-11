@@ -49,7 +49,9 @@ Route::post('properties/register-view', $basePathController.'PropertiesControlle
 Route::get('properties/get-property-views', $basePathController.'PropertiesController@getPropertyViews');
 Route::get('properties/get-property-types', $basePathController.'PropertiesController@getPropertyTypes');
 Route::resource('properties', $basePathController.'PropertiesController');
+Route::get('appointments/get-all-appointments', $basePathController.'AppointmentController@getAllAppointments');
 Route::resource('appointments', $basePathController."AppointmentController");
+
 
 
 // Users

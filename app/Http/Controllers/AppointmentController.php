@@ -62,6 +62,51 @@ class AppointmentController extends Controller
 
         }
     }
+
+       public function getAllAppointments(Request $request){
+        $usuario = JWTAuth::parseToken()->authenticate();
+        $start = $request->start;
+        $end = $request->end;
+
+        if($usuario->role_id === 1){
+            $appointments = appointment::when($start && $end, function ($query) use ($start, $end) {
+            return $query->whereBetween('created_at', [$start, $end]);
+        })
+        ->get();
+        }
+
+        if($usuario->role_id === 2){
+            $broker_id = $usuario->broker_id;
+            $properties_ids = Property::Where('broker_id', $broker_id)->get()->pluck('id')->toArray();
+            $appointments = appointment::WhereHas('property', function($query) use ($properties_ids){
+                $query->whereIn('id', $properties_ids);
+            })
+            ->when($start && $end, function ($query) use ($start, $end) {
+                return $query->whereBetween('created_at', [$start, $end]);
+            })
+            ->get();
+            return ApiResponseController::response('Consulta exitosa', 200, $appointments);
+        }
+
+        if($usuario->role_id === 3){
+            $agente_id = $usuario->id;
+
+            $properties_ids = Property::where('created_by', $agente_id)->pluck('id')->toArray();
+
+            $appointments = Appointment::whereHas('property', function($query) use ($properties_ids) {
+                $query->whereIn('id', $properties_ids);
+            })
+            ->when($start && $end, function ($query) use ($start, $end) {
+                return $query->whereBetween('created_at', [$start, $end]);
+            })
+            ->get();
+
+            return ApiResponseController::response('Consulta exitosa', 200, $appointments);
+        }
+
+     }
+
+
      public function store(Request $request)
     {
         // Validación de datos

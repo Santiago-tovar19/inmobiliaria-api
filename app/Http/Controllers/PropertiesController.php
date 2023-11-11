@@ -192,25 +192,41 @@ public function index(Request $request)
     public function getPropertyViews(Request $request){
 
         $usuario = JWTAuth::parseToken()->authenticate();
+        $start = $request->start;
+        $end = $request->end;
+        if ($usuario->role_id === 1) {
+        $propertyViews = PropertyView::when($start && $end, function ($query) use ($start, $end) {
+            return $query->whereBetween('created_at', [$start, $end]);
+        })
+        ->get();
 
-        if($usuario->role_id === 1){
-            $propertyViews = PropertyView::all();
-            return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
+        return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
         }
         if($usuario->role_id === 2){
             $broker_id = $usuario->broker_id;
             $properties_ids = Property::where('broker_id', $broker_id)->get()->pluck('id')->toArray();
-           $propertyViews =  PropertyView::whereHas('property', function($q) use ($properties_ids){
+            $propertyViews =  PropertyView::whereHas('property', function($q) use ($properties_ids){
                 $q->whereIn('id', $properties_ids);
-            })->get();
+            })
+            ->when($start && $end, function ($query) use ($start, $end) {
+            return $query->whereBetween('created_at', [$start, $end]);
+            });
+
+             $propertyViews = $propertyViews->get();
+
             return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
         }
         if($usuario->role_id === 3){
             $agente_id = $usuario->id;
             $properties_ids = Property::where('created_by', $agente_id)->get()->pluck('id')->toArray();
-            $propertyViews =  PropertyView::whereHas('property', function($q) use ($properties_ids){
+            $propertyViews =  PropertyView::whereHas('property', function ($q) use ($properties_ids) {
                 $q->whereIn('id', $properties_ids);
-            })->get();
+            })
+            ->when($start && $end, function ($query) use ($start, $end) {
+                return $query->whereBetween('created_at', [$start, $end]);
+            })
+            ->get();
+
             return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
         }
 
