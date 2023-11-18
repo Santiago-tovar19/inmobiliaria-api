@@ -57,6 +57,8 @@ Route::resource('appointments', $basePathController."AppointmentController");
 // Users
 Route::post('users/complete-signup/{token}', $basePathController.'UsersController@completeSignUp');
 Route::post('users/signup-costumer', $basePathController.'UsersController@signUpCustomer');
+Route::post('users/create-user',$basePathController.'UsersController@createUser');
+
 
 Route::group(['middleware' => ['api_access']], function () use ($basePathController) {
 
@@ -66,7 +68,8 @@ Route::group(['middleware' => ['api_access']], function () use ($basePathControl
     Route::get('users/resend-signup-email/{id}', $basePathController.'UsersController@resendSignUpEmail');
     Route::post('users/fav/{propertyId}/{fav}', $basePathController.'UsersController@setFavProperty');
     Route::get('users/set-property-fav/{propertyId}/{fav}', $basePathController.'UsersController@setFavProperty');
-    Route::resource('users', $basePathController.'UsersController');
+    // registro de usuarios pero solo si estas autenticado
+ Route::resource('users', $basePathController.'UsersController');
 });
 
 

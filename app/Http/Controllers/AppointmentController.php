@@ -73,6 +73,7 @@ class AppointmentController extends Controller
             return $query->whereBetween('created_at', [$start, $end]);
         })
         ->get();
+        return ApiResponseController::response('Consulta exitosa', 200, $appointments);
         }
 
         if($usuario->role_id === 2){

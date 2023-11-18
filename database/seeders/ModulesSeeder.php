@@ -29,10 +29,10 @@ class ModulesSeeder extends Seeder
                 'father_id'   => NULL,
             ],
             [
-                'name'        => 'Propiedades',
+                'name'        => 'Adm. de Propiedades',
                 'description' => 'Gestor de Propiedades',
                 'icon'        => 'heroicons_outline:home',
-                'path'        => 'propiedades',
+                'path'        => 'properties',
                 'father_id'   => NULL,
             ],
             [

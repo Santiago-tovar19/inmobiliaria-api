@@ -189,37 +189,32 @@ public function index(Request $request)
         return ApiResponseController::response('Consulta Exitosa, se guardo lo visita', 200, $propertyView);
     }
 
-    public function getPropertyViews(Request $request){
+    public function getPropertyViews(Request $request)
+{
+    $usuario = JWTAuth::parseToken()->authenticate();
+    $start = $request->start;
+    $end = $request->end;
 
-        $usuario = JWTAuth::parseToken()->authenticate();
-        $start = $request->start;
-        $end = $request->end;
-        if ($usuario->role_id === 1) {
+    //  if (!$start || !$end) {
+    //     $start = Carbon::now()->subDays(6)->toDateString();
+    //     $end = Carbon::now()->toDateString();
+    // }
+
+
+    if ($usuario->role_id === 1) {
         $propertyViews = PropertyView::when($start && $end, function ($query) use ($start, $end) {
-            return $query->whereBetween('created_at', [$start, $end]);
-        })
-        ->get();
+                return $query->whereBetween('created_at', [$start, $end]);
+            })
+            ->get();
 
         return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
-        }
-        if($usuario->role_id === 2){
-            $broker_id = $usuario->broker_id;
-            $properties_ids = Property::where('broker_id', $broker_id)->get()->pluck('id')->toArray();
-            $propertyViews =  PropertyView::whereHas('property', function($q) use ($properties_ids){
-                $q->whereIn('id', $properties_ids);
-            })
-            ->when($start && $end, function ($query) use ($start, $end) {
-            return $query->whereBetween('created_at', [$start, $end]);
-            });
+    }
 
-             $propertyViews = $propertyViews->get();
+    if ($usuario->role_id === 2) {
+        $broker_id = $usuario->broker_id;
+        $properties_ids = Property::where('broker_id', $broker_id)->pluck('id')->toArray();
 
-            return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
-        }
-        if($usuario->role_id === 3){
-            $agente_id = $usuario->id;
-            $properties_ids = Property::where('created_by', $agente_id)->get()->pluck('id')->toArray();
-            $propertyViews =  PropertyView::whereHas('property', function ($q) use ($properties_ids) {
+        $propertyViews =  PropertyView::whereHas('property', function ($q) use ($properties_ids) {
                 $q->whereIn('id', $properties_ids);
             })
             ->when($start && $end, function ($query) use ($start, $end) {
@@ -227,11 +222,24 @@ public function index(Request $request)
             })
             ->get();
 
-            return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
-        }
-
-
+        return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
     }
+
+    if ($usuario->role_id === 3) {
+        $agente_id = $usuario->id;
+        $properties_ids = Property::where('created_by', $agente_id)->pluck('id')->toArray();
+
+        $propertyViews =  PropertyView::whereHas('property', function ($q) use ($properties_ids) {
+                $q->whereIn('id', $properties_ids);
+            })
+            ->when($start && $end, function ($query) use ($start, $end) {
+                return $query->whereBetween('created_at', [$start, $end]);
+            })
+            ->get();
+
+        return ApiResponseController::response('Consulta Exitosa', 200, $propertyViews);
+    }
+}
 
     /**
      * Show the form for creating a new resource.

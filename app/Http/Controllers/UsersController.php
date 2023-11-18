@@ -102,6 +102,21 @@ class UsersController extends Controller
         return ApiResponseController::response('Usuario creado con exito', 200, $user);
     }
 
+    public function createUser(Request $request){
+         $user = new User();
+         $user->first_name = $request->first_name;
+         $user->email = $request->email;
+         $user->role_id = 4;
+         $user->save();
+         $user->verified   = $request->verified === 'true' ? true : false;
+         config(['auth.passwords.users.expire' => 10080]);
+		$token = Password::broker()->createToken($user);
+
+		$user->notify(new \App\Notifications\MailCreateAccount($token, $user->email, 'Consumidor'));
+
+        return ApiResponseController::response('Usuario creado con exito', 200,$user);
+    }
+
     /**
      * Display the specified resource.
      *

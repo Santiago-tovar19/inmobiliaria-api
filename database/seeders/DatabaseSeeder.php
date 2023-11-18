@@ -25,5 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ContractTypesSeeder::class);
         $this->call(CarsSeeder::class);
         $this->call(PropertiesSeeder::class);
+        $this->call(AppointmentSeeder::class);
+        $this->call(PropertyViewsSeeder::class);
     }
 }
