@@ -132,6 +132,11 @@ public function index(Request $request)
         }
     }
 
+     if ($request->filled('minPrice') && $request->filled('maxPrice')) {
+        $query->whereBetween('price', [$request->input('minPrice'), $request->input('maxPrice')]);
+    }
+
+
     try {
         $user = JWTAuth::parseToken()->authenticate();
 
