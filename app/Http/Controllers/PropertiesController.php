@@ -137,19 +137,21 @@ public function index(Request $request)
     }
 
 
-    try {
-        $user = JWTAuth::parseToken()->authenticate();
+   if (!$request->filled('publico')) {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
 
-        if ($user->role_id === 2) {
-            // Administrador (rol 2): Filtre por broker_id
-            $query->where('broker_id', $user->broker_id);
+            if ($user->role_id === 2) {
+                // Administrador (rol 2): Filtre por broker_id
+                $query->where('broker_id', $user->broker_id);
+            }
+            if ($user->role_id === 3) {
+                // Agente (rol 3): Filtre por created_by
+                $query->where('created_by', $user->id);
+            }
+        } catch (\Exception $e) {
+            // Manejar la excepción si no se puede autenticar al usuario
         }
-        if ($user->role_id === 3) {
-            // Agente (rol 3): Filtre por created_by
-            $query->where('created_by', $user->id);
-        }
-    } catch (\Exception $e) {
-        // Manejar la excepción si no se puede autenticar al usuario
     }
 
     if ($request->input("fav")) {
