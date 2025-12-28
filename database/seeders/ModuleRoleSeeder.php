@@ -38,6 +38,19 @@ class ModuleRoleSeeder extends Seeder
                 'role_id'   => Role::where('name', 'Master Admin')->first()->id
             ],
 
+            [
+                'module_id' => DB::table('modules')->where('name', 'Usuarios')->first()->id,
+                'role_id'   => Role::where('name', 'Consumidor')->first()->id
+            ],
+            [
+                'module_id' => DB::table('modules')->where('name', 'Adm. de Propiedades')->first()->id,
+                'role_id'   => Role::where('name', 'Consumidor')->first()->id
+            ],
+            [
+                'module_id' => DB::table('modules')->where('name', 'Reportes')->first()->id,
+                'role_id'   => Role::where('name', 'Consumidor')->first()->id
+            ],
+
             // Rol de Admin
             [
                 'module_id' => DB::table('modules')->where('name', 'Adm. de Propiedades')->first()->id,

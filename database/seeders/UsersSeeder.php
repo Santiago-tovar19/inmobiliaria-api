@@ -29,6 +29,14 @@ class UsersSeeder extends Seeder
                         'broker_id' => null,
 						'role_id'           => DB::table('roles')->where('name', 'Master Admin')->first()->id,
 					],
+					[
+						'first_name'         => 'Santiago Tovar',
+						'email'             => 'santiago@gmail.com',
+						'password'          => '123456',
+						'email_verified_at' => now(),
+                        'broker_id' => null,
+						'role_id'           => DB::table('roles')->where('name', 'Master Admin')->first()->id,
+					],
                     [
 						'first_name'         => 'Admin Master',
 						'email'             => 'adminmaster@gmail.com',

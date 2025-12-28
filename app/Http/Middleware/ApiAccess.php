@@ -19,21 +19,25 @@ class ApiAccess
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {
+{
+    \Log::info('ApiAccess middleware ejecutado');
 
-        // Check if token is valid
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-        } catch (\Exception $e) {
-            if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
-                return ApiResponseController::response('Token invalido', 401);
-            }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
-                return ApiResponseController::response('Token expirado', 401);
-            }else{
-                return ApiResponseController::response('Token no encontrado', 401);
-            }
+    try {
+        $user = JWTAuth::parseToken()->authenticate();
+        \Log::info('Token válido. Usuario autenticado: ' . $user->email);
+    } catch (\Exception $e) {
+        \Log::error('Error de token: ' . $e->getMessage());
+
+        if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
+            return ApiResponseController::response('Token invalido', 401);
+        }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
+            return ApiResponseController::response('Token expirado', 401);
+        }else{
+            return ApiResponseController::response('Token no encontrado', 401);
         }
-
-				return $next($request);
     }
+
+    return $next($request);
+}
+
 }

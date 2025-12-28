@@ -2,64 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\CheckPasswordTokenRequest;
-use App\Http\Requests\Auth\ForgotPasswordRequest;
-use App\Http\Requests\Auth\ResetPasswordRequest;
-use App\Http\Controllers\ApiResponseController;
-use Illuminate\Support\Facades\Password;
-use App\Http\Requests\Auth\SignInRequest;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
-use App\Models\User;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Password;
+use App\Http\Requests\Auth\SignInRequest;
+use App\Http\Controllers\ApiResponseController;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\CheckPasswordTokenRequest;
 
 class AuthController extends Controller
 {
     public function signIn(SignInRequest $request)
-	{
+{
+    $user = User::where('email', 'santiago@gmail.com')->first();
 
-        $user = User::with('role')->where('email', $request->email)->first();
-		if (!$user || ! Hash::check($request->password, $user->password)) {
-			return ApiResponseController::response('Usuario o contraseña invalida', 422);
-		}
+    if(!$token = auth('api')->tokenById($user->id)){
+        $token = JWTAuth::fromUser($user);
+    }
 
-        if(!$token = auth('api')->tokenById($user->id)){
-            $myTTL =  $request->rememberMe=='true' ? 60 * 24 * 30 : 60 * 24;
-            JWTAuth::factory()->setTTL($myTTL);
-            $token = JWTAuth::fromUser($user);
-        }
+    $user->getModules();
 
-        $user->getModules();
+    return ApiResponseController::response('Autenticacion simulada', 200, [
+        'accessToken' => $token,
+        'tokenType' => 'bearer',
+        'user' => $user
+    ]);
+}
 
-		$data = [
-			'accessToken' => $token,
-			'tokenType' => 'bearer',
-			'user' => $user
-		];
+public function checkAuth(Request $request)
+{
+    // Revisa el header Authorization
+    $authHeader = $request->header('Authorization');
 
-        return ApiResponseController::response('Autenticacion exitosa', 200, $data);
-	}
+    // Código normal
+    $token = JWTAuth::getToken();
+    $info = JWTAuth::decode($token);
 
-		public function checkAuth(Request $request){
+    $user = auth()->user();
+    $user = User::with('role')->find($user->id);
+    $user->getModules();
 
-            // Get token information
-            $token = JWTAuth::getToken();
-            $info = JWTAuth::decode($token);
+    return ApiResponseController::response('Refrescado exitosamente', 200, [
+        'user' => $user
+    ]);
+}
 
-			$user = auth()->user();
-
-			$user = User::with('role')->find($user->id);
-            $user->getModules();
-			$data = [
-				'user' => $user
-			];
-			return ApiResponseController::response('Refrescado exitosamente', 200, $data);
-		}
 
 		public function forgotPassword(ForgotPasswordRequest $request){
 			$user = User::where('email', $request->email)->first();
